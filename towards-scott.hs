@@ -15,16 +15,16 @@ if_ :: Bool_ -> a -> a -> a
 if_ (B b) a a' = b a a'
 
 
-newtype Maybe_ a = M (forall b. b -> (a -> b) -> b)
-
-nothing_ :: Maybe_ a
-nothing_ = M (\b f -> b)
+newtype Maybe_ a = M (forall b. (a -> b) -> b -> b)
 
 just_ :: a -> Maybe_ a
-just_ a = M (\b f -> f a)
+just_ a = M (\f b -> f a)
 
-maybe_ :: Maybe_ a -> b -> (a -> b) -> b
-maybe_ (M m) b f = m b f
+nothing_ :: Maybe_ a
+nothing_ = M (\f b -> b)
+
+maybe_ :: Maybe_ a -> (a -> b) -> b -> b
+maybe_ (M m) f b = m f b
 
 
 newtype Pair_ a b = P (forall c. (a -> b -> c) -> c)
@@ -39,13 +39,13 @@ snd_ :: Pair_ a b -> b
 snd_ (P p) = p (\a b -> b)
 
 
-newtype Nat_ = N (forall a. a -> (Nat_ -> a) -> a)
-
-zero_ :: Nat_
-zero_ = N (\a f -> a)
+newtype Nat_ = N (forall a. (Nat_ -> a) -> a -> a)
 
 succ_ :: Nat_ -> Nat_
-succ_ n = N (\a f -> f n)
+succ_ n = N (\f a -> f n)
 
-pred_ :: Nat_ -> a -> (Nat_ -> a) -> a
-pred_ (N n) a f = n a f
+zero_ :: Nat_
+zero_ = N (\f a -> a)
+
+pred_ :: Nat_ -> (Nat_ -> a) -> a -> a
+pred_ (N n) f a = n f a

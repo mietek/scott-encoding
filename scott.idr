@@ -21,22 +21,22 @@ _ifFalse : if_ false_ a a' = a'
 _ifFalse = Refl
 
 
-data Maybe_ a = M ({b : Type} -> b -> (a -> b) -> b)
-
-nothing_ : Maybe_ a
-nothing_ = M (\b, f => b)
+data Maybe_ a = M ({b : Type} -> (a -> b) -> b -> b)
 
 just_ : a -> Maybe_ a
-just_ a = M (\b, f => f a)
+just_ a = M (\f, b => f a)
 
-maybe_ : Maybe_ a -> b -> (a -> b) -> b
-maybe_ (M m) b f = m b f
+nothing_ : Maybe_ a
+nothing_ = M (\f, b => b)
 
-_maybeNothing : maybe_ nothing_ b f = b
-_maybeNothing = Refl
+maybe_ : Maybe_ a -> (a -> b) -> b -> b
+maybe_ (M m) f b = m f b
 
-_maybeJust : maybe_ (just_ a) b f = f a
+_maybeJust : maybe_ (just_ a) f b = f a
 _maybeJust = Refl
+
+_maybeNothing : maybe_ nothing_ f b = b
+_maybeNothing = Refl
 
 
 data Pair_ a b = P ({c : Type} -> (a -> b -> c) -> c)
@@ -57,19 +57,19 @@ _sndPair : snd_ (pair_ a b) = b
 _sndPair = Refl
 
 
-data Nat_ = N ({a : Type} -> a -> (Nat_ -> a) -> a)
-
-zero_ : Nat_
-zero_ = N (\a, f => a)
+data Nat_ = N ({a : Type} -> (Nat_ -> a) -> a -> a)
 
 succ_ : Nat_ -> Nat_
-succ_ n = N (\a, f => f n)
+succ_ n = N (\f, a => f n)
 
-pred_ : Nat_ -> a -> (Nat_ -> a) -> a
-pred_ (N n) a f = n a f
+zero_ : Nat_
+zero_ = N (\f, a => a)
 
-_predZero : pred_ zero_ a f = a
-_predZero = Refl
+pred_ : Nat_ -> (Nat_ -> a) -> a -> a
+pred_ (N n) f a = n f a
 
-_predSucc : pred_ (succ_ n) a f = f n
+_predSucc : pred_ (succ_ n) f a = f n
 _predSucc = Refl
+
+_predZero : pred_ zero_ f a = a
+_predZero = Refl

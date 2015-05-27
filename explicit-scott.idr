@@ -23,22 +23,22 @@ _ifFalse = Refl
 
 
 Maybe_ : Type -> Type
-Maybe_ a = (b : Type) -> b -> (a -> b) -> b
-
-nothing_ : Maybe_ a
-nothing_ = \_, b, f => b
+Maybe_ a = (b : Type) -> (a -> b) -> b -> b
 
 just_ : a -> Maybe_ a
-just_ a = \_, b, f => f a
+just_ a = \_, f, b => f a
 
-maybe_ : Maybe_ a -> b -> (a -> b) -> b
-maybe_ m b f = m _ b f
+nothing_ : Maybe_ a
+nothing_ = \_, f, b => b
 
-_maybeNothing : maybe_ nothing_ b f = b
-_maybeNothing = Refl
+maybe_ : Maybe_ a -> (a -> b) -> b -> b
+maybe_ m f b = m _ f b
 
-_maybeJust : maybe_ (just_ a) b f = f a
+_maybeJust : maybe_ (just_ a) f b = f a
 _maybeJust = Refl
+
+_maybeNothing : maybe_ nothing_ f b = b
+_maybeNothing = Refl
 
 
 Pair_ : Type -> Type -> Type
@@ -60,25 +60,25 @@ _sndPair : snd_ (pair_ a b) = b
 _sndPair = Refl
 
 
+-- NOTE: The following is accepted, but is also wrong.
+
 Nat_ : Type
-Nat_ = (a : Type) -> a -> (Nat_ -> a) -> a
-
--- NOTE: For some reason, Idris does not accept the commented-out things.
-
--- zero_ : Nat_
-zero_ : (a : Type) -> a -> (Nat_ -> a) -> a
-zero_ = \_, a, f => a
+Nat_ = (a : Type) -> (Nat_ -> a) -> a -> a
 
 -- succ_ : Nat_ -> Nat_
-succ_ : Nat_ -> (a : Type) -> a -> (Nat_ -> a) -> a
-succ_ n = \_, a, f => f n
+succ_ : Nat_ -> (a : Type) -> (Nat_ -> a) -> a -> a
+succ_ n = \_, f, a => f n
 
--- pred_ : Nat_ -> a -> (Nat_ -> a) -> a
-pred_ : ((a : Type) -> a -> (Nat_ -> a) -> a) -> a -> (Nat_ -> a) -> a
-pred_ n a f = n _ a f
+-- zero_ : Nat_
+zero_ : (a : Type) -> (Nat_ -> a) -> a -> a
+zero_ = \_, f, a => a
 
--- _predZero : pred_ zero_ a f = a
--- _predZero = Refl
+-- pred_ : Nat_ -> (Nat_ -> a) -> a -> a
+pred_ : ((a : Type) -> (Nat_ -> a) -> a -> a) -> (Nat_ -> a) -> a -> a
+pred_ n f a = n _ f a
 
--- _predSucc : pred_ (succ_ n) a f = f n
+-- _predSucc : pred_ (succ_ n) f a = f n
 -- _predSucc = Refl
+
+-- _predZero : pred_ zero_ f a = a
+-- _predZero = Refl
