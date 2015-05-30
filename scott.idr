@@ -2,6 +2,10 @@ module Scott
 
 %default total
 
+iterated : Nat -> (a -> a) -> a -> a
+iterated (S k) f x = f (iterated k f x)
+iterated Z f x = x
+
 
 data Bool_ = B ({a : Type} -> a -> a -> a)
 
@@ -130,6 +134,14 @@ fromNat_ n = unnat_ n S Z
 toNat_ : Nat -> Nat_
 toNat_ (S n) = succ_ (toNat_ n)
 toNat_ Z = zero_
+
+-- TODO: Figure out how to use %elim to prove the following:
+--
+-- _fromNat : {n : Nat} -> fromNat_ (iterated n succ_ zero_) = n
+-- _fromNat = Refl
+--
+-- _toNat : {n : Nat} -> toNat_ n = iterated n succ_ zero_
+-- _toNat = Refl
 
 
 data List_ a = L ({b : Type} -> (a -> b -> b) -> b -> b)
