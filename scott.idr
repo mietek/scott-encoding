@@ -11,7 +11,6 @@ test_iterated_ (S n) = rewrite test_iterated_ n in Refl
 test_iterated_ Z = Refl
 
 
-
 Bool_ : Type
 Bool_ = (a : Type) -> a -> a -> a
 
@@ -103,11 +102,11 @@ fromPair_ p = unpair_ p (\a, b => (a, b))
 toPair_ : (a, b) -> Pair_ a b
 toPair_ (a, b) = pair_ a b
 
-fst_ : Pair_ a b -> a
-fst_ p = unpair_ p (\a, b => a)
+first_ : Pair_ a b -> a
+first_ p = unpair_ p (\a, b => a)
 
-snd_ : Pair_ a b -> b
-snd_ p = unpair_ p (\a, b => b)
+second_ : Pair_ a b -> b
+second_ p = unpair_ p (\a, b => b)
 
 test_unpairPair_ : unpair_ (pair_ a b) (\a, b => (a, b)) = (a, b)
 test_unpairPair_ = Refl
@@ -118,18 +117,18 @@ test_fromPair_ = Refl
 test_toPair_ : toPair_ (a, b) = pair_ a b
 test_toPair_ = Refl
 
-test_fstPair_ : fst_ (pair_ a b) = a
-test_fstPair_ = Refl
+test_firstPair_ : first_ (pair_ a b) = a
+test_firstPair_ = Refl
 
-test_sndPair_ : snd_ (pair_ a b) = b
-test_sndPair_ = Refl
+test_secondPair_ : second_ (pair_ a b) = b
+test_secondPair_ = Refl
 
 
 Nat_ : Type
 Nat_ = (a : Type) -> (a -> a) -> a -> a
 
 succ_ : Nat_ -> Nat_
-succ_ n = \_, f, a => n _ f (f a)
+succ_ n = \_, f, a => f (n _ f a)
 
 zero_ : Nat_
 zero_ = \_, f, a => a
@@ -148,18 +147,16 @@ test_toNat_ : (n : Nat) -> toNat_ n = iterated n succ_ zero_
 test_toNat_ (S n) = rewrite test_toNat_ n in Refl
 test_toNat_ Z = Refl
 
--- TODO: Figure out how to prove the following:
-
--- test_fromNat_ : (n : Nat) -> fromNat_ (iterated n succ_ zero_) = n
--- test_fromNat_ (S n) = rewrite test_fromNat_ n in Refl
--- test_fromNat_ Z = Refl
+test_fromNat_ : (n : Nat) -> fromNat_ (iterated n succ_ zero_) = n
+test_fromNat_ (S n) = rewrite test_fromNat_ n in Refl
+test_fromNat_ Z = Refl
 
 
 List_ : Type -> Type
 List_ a = (b : Type) -> (a -> b -> b) -> b -> b
 
 cons_ : a -> List_ a -> List_ a
-cons_ a l = \_, f, b => l _ f (f a b)
+cons_ a l = \_, f, b => f a (l _ f b)
 
 nil_ : List_ a
 nil_ = \_, f, b => b
@@ -174,12 +171,12 @@ toList_ : List a -> List_ a
 toList_ (a :: l) = cons_ a (toList_ l)
 toList_ [] = nil_
 
+-- TODO: Improve the following:
+
 test_toList_ : (n : Nat) -> toList_ (iterated n (() ::) []) = iterated n (cons_ ()) nil_
 test_toList_ (S n) = rewrite test_toList_ n in Refl
 test_toList_ Z = Refl
 
--- TODO: Figure out how to prove the following:
-
--- test_fromList_ : (n : Nat) -> fromList_ (iterated n (cons_ ()) nil_) = iterated n (() ::) []
--- test_fromList_ (S n) = rewrite test_fromList_ n in Refl
--- test_fromList_ Z = Refl
+test_fromList_ : (n : Nat) -> fromList_ (iterated n (cons_ ()) nil_) = iterated n (() ::) []
+test_fromList_ (S n) = rewrite test_fromList_ n in Refl
+test_fromList_ Z = Refl
