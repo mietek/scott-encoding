@@ -7,7 +7,7 @@ BoolS : Type
 BoolS = (a : Type) -> a -> a -> a
 
 unboolS : a -> a -> BoolS -> a
-unboolS a a' b = b _ a a'
+unboolS a a' s = s _ a a'
 
 trueS : BoolS
 trueS = \_, a, a' => a
@@ -16,7 +16,7 @@ falseS : BoolS
 falseS = \_, a, a' => a'
 
 fromBoolS : BoolS -> Bool
-fromBoolS = unboolS True False
+fromBoolS s = unboolS True False s
 
 toBoolS : Bool -> BoolS
 toBoolS True  = trueS
@@ -27,7 +27,7 @@ MaybeS : Type -> Type
 MaybeS a = (b : Type) -> (a -> b) -> b -> b
 
 unmaybeS : (a -> b) -> b -> MaybeS a -> b
-unmaybeS f b m = m _ f b
+unmaybeS f b s = s _ f b
 
 justS : a -> MaybeS a
 justS a = \_, f, b => f a
@@ -36,7 +36,7 @@ nothingS : MaybeS a
 nothingS = \_, f, b => b
 
 fromMaybeS : MaybeS a -> Maybe a
-fromMaybeS = unmaybeS Just Nothing
+fromMaybeS s = unmaybeS Just Nothing s
 
 toMaybeS : Maybe a -> MaybeS a
 toMaybeS (Just a) = justS a
@@ -47,7 +47,7 @@ EitherS : Type -> Type -> Type
 EitherS a b = (c : Type) -> (a -> c) -> (b -> c) -> c
 
 uneitherS : (a -> c) -> (b -> c) -> EitherS a b -> c
-uneitherS f g e = e _ f g
+uneitherS f g s = s _ f g
 
 leftS : a -> EitherS a b
 leftS a = \_, f, g => f a
@@ -56,7 +56,7 @@ rightS : b -> EitherS a b
 rightS b = \_, f, g => g b
 
 fromEitherS : EitherS a b -> Either a b
-fromEitherS = uneitherS Left Right
+fromEitherS s = uneitherS Left Right s
 
 toEitherS : Either a b -> EitherS a b
 toEitherS (Left a)  = leftS a
@@ -67,38 +67,38 @@ PairS : Type -> Type -> Type
 PairS a b = (c : Type) -> (a -> b -> c) -> c
 
 unpairS : (a -> b -> c) -> PairS a b -> c
-unpairS f p = p _ f
+unpairS f s = s _ f
 
 pairS : a -> b -> PairS a b
 pairS a b = \_, f => f a b
 
 fromPairS : PairS a b -> (a, b)
-fromPairS = unpairS (\a, b => (a, b))
+fromPairS s = unpairS (\a, b => (a, b)) s
 
 toPairS : (a, b) -> PairS a b
 toPairS (a, b) = pairS a b
 
 fstS : PairS a b -> a
-fstS = unpairS (\a, b => a)
+fstS s = unpairS (\a, b => a) s
 
 sndS : PairS a b -> b
-sndS = unpairS (\a, b => b)
+sndS s = unpairS (\a, b => b) s
 
 
 NatS : Type
 NatS = (a : Type) -> (a -> a) -> a -> a
 
 unnatS : (a -> a) -> a -> NatS -> a
-unnatS f a n = n _ f a
+unnatS f a s = s _ f a
 
 succS : NatS -> NatS
-succS n = \_, f, a => f (n _ f a)
+succS s = \_, f, a => f (s _ f a)
 
 zeroS : NatS
 zeroS = \_, f, a => a
 
 fromNatS : NatS -> Nat
-fromNatS = unnatS S Z
+fromNatS s = unnatS S Z s
 
 toNatS : Nat -> NatS
 toNatS (S n) = succS (toNatS n)
@@ -109,20 +109,20 @@ ListS : Type -> Type
 ListS a = (b : Type) -> (a -> b -> b) -> b -> b
 
 unlistS : (a -> b -> b) -> b -> ListS a -> b
-unlistS f b l = l _ f b
+unlistS f b s = s _ f b
 
 consS : a -> ListS a -> ListS a
-consS a l = \_, f, b => f a (l _ f b)
+consS a s = \_, f, b => f a (s _ f b)
 
 nilS : ListS a
 nilS = \_, f, b => b
 
 fromListS : ListS a -> List a
-fromListS = unlistS (::) []
+fromListS s = unlistS (::) [] s
 
 toListS : List a -> ListS a
-toListS (a :: l) = consS a (toListS l)
-toListS []       = nilS
+toListS (a :: as) = consS a (toListS as)
+toListS []        = nilS
 
 
 iterated : Nat -> (a -> a) -> a -> a
