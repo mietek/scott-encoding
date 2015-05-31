@@ -3,8 +3,13 @@ module Scott
 %default total
 
 iterated : Nat -> (a -> a) -> a -> a
-iterated (S k) f x = f (iterated k f x)
-iterated Z f x = x
+iterated (S n) f a = f (iterated n f a)
+iterated Z f a = a
+
+test_iterated_ : (n : Nat) -> iterated n S Z = n
+test_iterated_ (S n) = rewrite test_iterated_ n in Refl
+test_iterated_ Z = Refl
+
 
 
 Bool_ : Type
@@ -26,23 +31,23 @@ toBool_ : Bool -> Bool_
 toBool_ True = true_
 toBool_ False = false_
 
-_unboolTrue : unbool_ true_ a a' = a
-_unboolTrue = Refl
+test_unboolTrue : unbool_ true_ a a' = a
+test_unboolTrue = Refl
 
-_unboolFalse : unbool_ false_ a a' = a'
-_unboolFalse = Refl
+test_unboolFalse : unbool_ false_ a a' = a'
+test_unboolFalse = Refl
 
-_fromTrue : fromBool_ true_ = True
-_fromTrue = Refl
+test_fromTrue : fromBool_ true_ = True
+test_fromTrue = Refl
 
-_fromFalse : fromBool_ false_ = False
-_fromFalse = Refl
+test_fromFalse : fromBool_ false_ = False
+test_fromFalse = Refl
 
-_toTrue : toBool_ True = true_
-_toTrue = Refl
+test_toTrue : toBool_ True = true_
+test_toTrue = Refl
 
-_toFalse : toBool_ False = false_
-_toFalse = Refl
+test_toFalse : toBool_ False = false_
+test_toFalse = Refl
 
 
 Maybe_ : Type -> Type
@@ -64,23 +69,23 @@ toMaybe_ : Maybe a -> Maybe_ a
 toMaybe_ (Just a) = just_ a
 toMaybe_ Nothing = nothing_
 
-_unmaybeJust : unmaybe_ (just_ a) f b = f a
-_unmaybeJust = Refl
+test_unmaybeJust_ : unmaybe_ (just_ a) f b = f a
+test_unmaybeJust_ = Refl
 
-_unmaybeNothing : unmaybe_ nothing_ f b = b
-_unmaybeNothing = Refl
+test_unmaybeNothing_ : unmaybe_ nothing_ f b = b
+test_unmaybeNothing_ = Refl
 
-_fromJust : fromMaybe_ (just_ a) = Just a
-_fromJust = Refl
+test_fromJust_ : fromMaybe_ (just_ a) = Just a
+test_fromJust_ = Refl
 
-_fromNothing : fromMaybe_ nothing_ = Nothing
-_fromNothing = Refl
+test_fromNothing_ : fromMaybe_ nothing_ = Nothing
+test_fromNothing_ = Refl
 
-_toJust : toMaybe_ (Just a) = just_ a
-_toJust = Refl
+test_toJust_ : toMaybe_ (Just a) = just_ a
+test_toJust_ = Refl
 
-_toNothing : toMaybe_ Nothing = nothing_
-_toNothing = Refl
+test_toNothing_ : toMaybe_ Nothing = nothing_
+test_toNothing_ = Refl
 
 
 Pair_ : Type -> Type -> Type
@@ -104,20 +109,20 @@ fst_ p = unpair_ p (\a, b => a)
 snd_ : Pair_ a b -> b
 snd_ p = unpair_ p (\a, b => b)
 
-_unpairPair : unpair_ (pair_ a b) (\a, b => (a, b)) = (a, b)
-_unpairPair = Refl
+test_unpairPair_ : unpair_ (pair_ a b) (\a, b => (a, b)) = (a, b)
+test_unpairPair_ = Refl
 
-_fromPair : fromPair_ (pair_ a b) = (a, b)
-_fromPair = Refl
+test_fromPair_ : fromPair_ (pair_ a b) = (a, b)
+test_fromPair_ = Refl
 
-_toPair : toPair_ (a, b) = pair_ a b
-_toPair = Refl
+test_toPair_ : toPair_ (a, b) = pair_ a b
+test_toPair_ = Refl
 
-_fstPair : fst_ (pair_ a b) = a
-_fstPair = Refl
+test_fstPair_ : fst_ (pair_ a b) = a
+test_fstPair_ = Refl
 
-_sndPair : snd_ (pair_ a b) = b
-_sndPair = Refl
+test_sndPair_ : snd_ (pair_ a b) = b
+test_sndPair_ = Refl
 
 
 Nat_ : Type
@@ -139,15 +144,15 @@ toNat_ : Nat -> Nat_
 toNat_ (S n) = succ_ (toNat_ n)
 toNat_ Z = zero_
 
-_toNat : (n : Nat) -> toNat_ n = iterated n succ_ zero_
-_toNat Z = Refl
-_toNat (S n) = rewrite _toNat n in Refl
+test_toNat_ : (n : Nat) -> toNat_ n = iterated n succ_ zero_
+test_toNat_ (S n) = rewrite test_toNat_ n in Refl
+test_toNat_ Z = Refl
 
 -- TODO: Figure out how to prove the following:
---
--- _fromToNat : (n : Nat) -> fromNat_ (toNat_ n) = n
--- _fromToNat Z = Refl
--- _fromToNat (S n) = rewrite _fromToNat n in Refl
+
+-- test_fromNat_ : (n : Nat) -> fromNat_ (iterated n succ_ zero_) = n
+-- test_fromNat_ (S n) = rewrite test_fromNat_ n in Refl
+-- test_fromNat_ Z = Refl
 
 
 List_ : Type -> Type
@@ -169,12 +174,12 @@ toList_ : List a -> List_ a
 toList_ (a :: l) = cons_ a (toList_ l)
 toList_ [] = nil_
 
-_toList : (n : Nat) -> toList_ (iterated n (() ::) []) = iterated n (cons_ ()) nil_
-_toList Z = Refl
-_toList (S n) = rewrite _toList n in Refl
+test_toList_ : (n : Nat) -> toList_ (iterated n (() ::) []) = iterated n (cons_ ()) nil_
+test_toList_ (S n) = rewrite test_toList_ n in Refl
+test_toList_ Z = Refl
 
 -- TODO: Figure out how to prove the following:
---
--- _fromToList : (n : Nat) -> fromList_ (toList_ (iterated n (() ::) [])) = iterated n (() ::) []
--- _fromToList Z = Refl
--- _fromToList (S n) = rewrite _fromToList n in Refl
+
+-- test_fromList_ : (n : Nat) -> fromList_ (iterated n (cons_ ()) nil_) = iterated n (() ::) []
+-- test_fromList_ (S n) = rewrite test_fromList_ n in Refl
+-- test_fromList_ Z = Refl
