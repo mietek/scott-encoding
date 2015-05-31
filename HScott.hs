@@ -3,9 +3,6 @@
 module HScott where
 
 
-data Nat = S Nat | Z deriving (Eq, Show)
-
-
 type BoolS = forall a. a -> a -> a
 
 unboolS :: a -> a -> BoolS -> a
@@ -120,3 +117,6 @@ fromListS = unlistS (:) []
 toListS :: [a] -> ListS a
 toListS (a : l) = consS a (toListS l)
 toListS []      = nilS
+
+
+data Nat = S Nat | Z deriving (Eq, Show)
