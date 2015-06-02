@@ -81,6 +81,8 @@ sndS :: PairS a b -> b
 sndS s = unpairS (\a b -> b) s
 
 
+data Nat = S Nat | Z deriving (Eq, Ord, Read, Show)
+
 type NatS = forall a. (a -> a) -> a -> a
 
 unnatS :: (a -> a) -> a -> NatS -> a
@@ -117,6 +119,3 @@ fromListS s = unlistS (:) [] s
 toListS :: [a] -> ListS a
 toListS (a : as) = consS a (toListS as)
 toListS []       = nilS
-
-
-data Nat = S Nat | Z deriving (Eq, Show)
