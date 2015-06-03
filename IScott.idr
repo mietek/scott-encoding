@@ -78,11 +78,11 @@ fromPairS s = unPairS (\a, b => (a, b)) s
 toPairS : (a, b) -> PairS a b
 toPairS (a, b) = pairS a b
 
-firstS : PairS a b -> a
-firstS s = unPairS (\a, b => a) s
+fstS : PairS a b -> a
+fstS s = unPairS (\a, b => a) s
 
-secondS : PairS a b -> b
-secondS s = unPairS (\a, b => b) s
+sndS : PairS a b -> b
+sndS s = unPairS (\a, b => b) s
 
 
 NatS : Type
@@ -123,15 +123,6 @@ fromListS s = unListS (::) [] s
 toListS : List a -> ListS a
 toListS (a :: as) = consS a (toListS as)
 toListS []        = nilS
-
-
-iterated : Nat -> (a -> a) -> a -> a
-iterated (S n) f a = f (iterated n f a)
-iterated Z f a     = a
-
-iteratedP : (n : Nat) -> iterated n S Z = n
-iteratedP (S n) = rewrite iteratedP n in Refl
-iteratedP Z     = Refl
 
 
 unBoolTrueSP : unBoolS a a' trueS = a
@@ -200,12 +191,20 @@ fromPairSP = Refl
 toPairSP : toPairS (a, b) = pairS a b
 toPairSP = Refl
 
-firstPairSP : firstS (pairS a b) = a
-firstPairSP = Refl
+fstPairSP : fstS (pairS a b) = a
+fstPairSP = Refl
 
-secondPairSP : secondS (pairS a b) = b
-secondPairSP = Refl
+sndPairSP : sndS (pairS a b) = b
+sndPairSP = Refl
 
+
+iterated : Nat -> (a -> a) -> a -> a
+iterated (S n) f a = f (iterated n f a)
+iterated Z f a     = a
+
+iteratedP : (n : Nat) -> iterated n S Z = n
+iteratedP (S n) = rewrite iteratedP n in Refl
+iteratedP Z     = Refl
 
 fromNatSP : (n : Nat) -> fromNatS (iterated n succS zeroS) = n
 fromNatSP (S n) = rewrite fromNatSP n in Refl

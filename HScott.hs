@@ -74,11 +74,11 @@ fromPairS s = unPairS (\a b -> (a, b)) s
 toPairS :: (a, b) -> PairS a b
 toPairS (a, b) = pairS a b
 
-firstS :: PairS a b -> a
-firstS s = unPairS (\a b -> a) s
+fstS :: PairS a b -> a
+fstS s = unPairS (\a b -> a) s
 
-secondS :: PairS a b -> b
-secondS s = unPairS (\a b -> b) s
+sndS :: PairS a b -> b
+sndS s = unPairS (\a b -> b) s
 
 
 data Nat = S Nat | Z deriving (Eq, Ord, Read, Show)

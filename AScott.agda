@@ -1,9 +1,11 @@
 module AScott where
 
-import Data.Bool as A
-import Data.Maybe as A
-import Data.Sum as A
-import Data.Product as A
+open import Data.Bool
+open import Data.Maybe
+open import Data.Sum
+open import Data.Product
+open import Data.Nat
+open import Data.List
 
 
 BoolS : Set₁
@@ -18,12 +20,12 @@ trueS = \a a' -> a
 falseS : BoolS
 falseS = \a a' -> a'
 
-fromBoolS : BoolS -> A.Bool
-fromBoolS s = unBoolS A.true A.false s
+fromBoolS : BoolS -> Bool
+fromBoolS s = unBoolS true false s
 
-toBoolS : A.Bool -> BoolS
-toBoolS A.true  = trueS
-toBoolS A.false = falseS
+toBoolS : Bool -> BoolS
+toBoolS true  = trueS
+toBoolS false = falseS
 
 
 MaybeS : Set -> Set₁
@@ -38,12 +40,12 @@ justS a = \f b -> f a
 nothingS : {A : Set} -> MaybeS A
 nothingS = \f b -> b
 
-fromMaybeS : {A : Set} -> MaybeS A -> A.Maybe A
-fromMaybeS s = unMaybeS A.just A.nothing s
+fromMaybeS : {A : Set} -> MaybeS A -> Maybe A
+fromMaybeS s = unMaybeS just nothing s
 
-toMaybeS : {A : Set} -> A.Maybe A -> MaybeS A
-toMaybeS (A.just a) = justS a
-toMaybeS A.nothing  = nothingS
+toMaybeS : {A : Set} -> Maybe A -> MaybeS A
+toMaybeS (just a) = justS a
+toMaybeS nothing  = nothingS
 
 
 EitherS : Set -> Set -> Set₁
@@ -58,12 +60,12 @@ leftS a = \f g -> f a
 rightS : {A B : Set} -> B -> EitherS A B
 rightS b = \f g -> g b
 
-fromEitherS : {A B : Set} -> EitherS A B -> A A.⊎ B
-fromEitherS s = unEitherS A.inj₁ A.inj₂ s
+fromEitherS : {A B : Set} -> EitherS A B -> A ⊎ B
+fromEitherS s = unEitherS inj₁ inj₂ s
 
-toEitherS : {A B : Set} -> A A.⊎ B -> EitherS A B
-toEitherS (A.inj₁ a) = leftS a
-toEitherS (A.inj₂ b) = rightS b
+toEitherS : {A B : Set} -> A ⊎ B -> EitherS A B
+toEitherS (inj₁ a) = leftS a
+toEitherS (inj₂ b) = rightS b
 
 
 PairS : Set -> Set -> Set₁
@@ -75,11 +77,54 @@ unPairS f s = s f
 pairS : {A B : Set} -> A -> B -> PairS A B
 pairS a b = \f -> f a b
 
+fromPairS : {A B : Set} -> PairS A B -> A × B
+fromPairS s = unPairS (\a b -> (a , b)) s
 
--- TODO:
+toPairS : {A B : Set} -> A × B -> PairS A B
+toPairS (a , b) = pairS a b
 
--- fromPairS : {A B : Set} -> PairS A B -> A.Σ A B
--- fromPairS s = unPairS (\a b -> (a A., b)) s
+fstS : forall {A B} -> PairS A B -> A
+fstS s = unPairS (\a b -> a) s
 
--- toPairS : {A B : Set} -> A.Σ A B -> PairS A B
--- toPairS (a A., b) = pairS a b
+sndS : forall {A B} -> PairS A B -> B
+sndS s = unPairS (\a b -> b) s
+
+
+NatS : Set₁
+NatS = {A : Set} -> (A -> A) -> A -> A
+
+unNatS : {A : Set} -> (A -> A) -> A -> NatS -> A
+unNatS f a s = s f a
+
+succS : NatS -> NatS
+succS s = \f a -> f (s f a)
+
+zeroS : NatS
+zeroS = \f a -> a
+
+fromNatS : NatS -> ℕ
+fromNatS s = unNatS suc zero s
+
+toNatS : ℕ -> NatS
+toNatS (suc n) = succS (toNatS n)
+toNatS zero    = zeroS
+
+
+ListS : Set -> Set₁
+ListS A = {B : Set} -> (A -> B -> B) -> B -> B
+
+unListS : {A B : Set} -> (A -> B -> B) -> B -> ListS A -> B
+unListS f b s = s f b
+
+consS : {A : Set} -> A -> ListS A -> ListS A
+consS a s = \f b -> f a (s f b)
+
+nilS : {A : Set} -> ListS A
+nilS = \f b -> b
+
+fromListS : {A : Set} -> ListS A -> List A
+fromListS s = unListS (_∷_) [] s
+
+toListS : {A : Set} -> List A -> ListS A
+toListS (a ∷ as) = consS a (toListS as)
+toListS []       = nilS
