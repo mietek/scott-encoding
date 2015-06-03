@@ -4,9 +4,9 @@ module IScott
 
 
 BoolS : Type
-BoolS = (a : Type) -> a -> a -> a
+BoolS = (A : Type) -> A -> A -> A
 
-unBoolS : a -> a -> BoolS -> a
+unBoolS : {A : Type} -> A -> A -> BoolS -> A
 unBoolS a a' s = s _ a a'
 
 trueS : BoolS
@@ -22,205 +22,201 @@ toBoolS : Bool -> BoolS
 toBoolS True  = trueS
 toBoolS False = falseS
 
+test_unBoolTrueS : unBoolS a a' trueS = a
+test_unBoolTrueS = Refl
+
+test_unBoolFalseS : unBoolS a a' falseS = a'
+test_unBoolFalseS = Refl
+
+test_fromTrueS : fromBoolS trueS = True
+test_fromTrueS = Refl
+
+test_fromFalseS : fromBoolS falseS = False
+test_fromFalseS = Refl
+
+test_toTrueS : toBoolS True = trueS
+test_toTrueS = Refl
+
+test_toFalseS : toBoolS False = falseS
+test_toFalseS = Refl
+
 
 MaybeS : Type -> Type
-MaybeS a = (b : Type) -> (a -> b) -> b -> b
+MaybeS A = {B : Type} -> (A -> B) -> B -> B
 
-unMaybeS : (a -> b) -> b -> MaybeS a -> b
-unMaybeS f b s = s _ f b
+unMaybeS : {A, B : Type} -> (A -> B) -> B -> MaybeS A -> B
+unMaybeS f b s = s f b
 
-justS : a -> MaybeS a
-justS a = \_, f, b => f a
+justS : {A : Type} -> A -> MaybeS A
+justS a = \f, b => f a
 
-nothingS : MaybeS a
-nothingS = \_, f, b => b
+nothingS : {A : Type} -> MaybeS A
+nothingS = \f, b => b
 
-fromMaybeS : MaybeS a -> Maybe a
+fromMaybeS : {A : Type} -> MaybeS A -> Maybe A
 fromMaybeS s = unMaybeS Just Nothing s
 
-toMaybeS : Maybe a -> MaybeS a
+-- TODO: Report bug #1 (total function is not recognised as total)
+toMaybeS : {A : Type} -> Maybe A -> MaybeS A
 toMaybeS (Just a) = justS a
 toMaybeS Nothing  = nothingS
 
+test_unMaybeJustS : unMaybeS f b (justS a) = f a
+test_unMaybeJustS = Refl
+
+test_unMaybeNothingS : unMaybeS f b nothingS = b
+test_unMaybeNothingS = Refl
+
+test_fromJustS : fromMaybeS (justS a) = Just a
+test_fromJustS = Refl
+
+test_fromNothingS : fromMaybeS nothingS = Nothing
+test_fromNothingS = Refl
+
+-- TODO: Report bug #2 (implicit argument prevents unification)
+-- test_toJustS : toMaybeS (Just a) = justS a
+-- test_toJustS = Refl
+
+-- TODO: Report bug #2 (implicit argument prevents unification)
+-- test_toNothingS : toMaybeS Nothing = nothingS
+-- test_toNothingS = Refl
+
 
 EitherS : Type -> Type -> Type
-EitherS a b = (c : Type) -> (a -> c) -> (b -> c) -> c
+EitherS A B = {C : Type} -> (A -> C) -> (B -> C) -> C
 
-unEitherS : (a -> c) -> (b -> c) -> EitherS a b -> c
-unEitherS f g s = s _ f g
+unEitherS : {A, B, C : Type} -> (A -> C) -> (B -> C) -> EitherS A B -> C
+unEitherS f g s = s f g
 
-leftS : a -> EitherS a b
-leftS a = \_, f, g => f a
+leftS : {A, B : Type} -> A -> EitherS A B
+leftS a = \f, g => f a
 
-rightS : b -> EitherS a b
-rightS b = \_, f, g => g b
+rightS : {A, B : Type} -> B -> EitherS A B
+rightS b = \f, g => g b
 
-fromEitherS : EitherS a b -> Either a b
+fromEitherS : {A, B : Type} -> EitherS A B -> Either A B
 fromEitherS s = unEitherS Left Right s
 
-toEitherS : Either a b -> EitherS a b
+-- TODO: Report bug #1 (total function is not recognised as total)
+toEitherS : {A, B : Type} -> Either A B -> EitherS A B
 toEitherS (Left a)  = leftS a
 toEitherS (Right b) = rightS b
 
+test_unEitherLeftS : unEitherS f g (leftS a) = f a
+test_unEitherLeftS = Refl
+
+test_unEitherRightS : unEitherS f g (rightS b) = g b
+test_unEitherRightS = Refl
+
+test_fromLeftS : fromEitherS (leftS a) = Left a
+test_fromLeftS = Refl
+
+test_fromRightS : fromEitherS (rightS b) = Right b
+test_fromRightS = Refl
+
+-- TODO: Report bug #2 (implicit argument prevents unification)
+-- test_toLeftS : toEitherS (Left a) = leftS a
+-- test_toLeftS = Refl
+
+-- TODO: Report bug #2 (implicit argument prevents unification)
+-- test_toRightS : toEitherS (Right b) = rightS b
+-- test_toRightS = Refl
+
 
 PairS : Type -> Type -> Type
-PairS a b = (c : Type) -> (a -> b -> c) -> c
+PairS A B = {C : Type} -> (A -> B -> C) -> C
 
-unPairS : (a -> b -> c) -> PairS a b -> c
-unPairS f s = s _ f
+unPairS : {A, B, C : Type} -> (A -> B -> C) -> PairS A B -> C
+unPairS f s = s f
 
-pairS : a -> b -> PairS a b
-pairS a b = \_, f => f a b
+pairS : {A, B : Type} -> A -> B -> PairS A B
+pairS a b = \f => f a b
 
-fromPairS : PairS a b -> (a, b)
+fromPairS : {A, B : Type} -> PairS A B -> (A, B)
 fromPairS s = unPairS (\a, b => (a, b)) s
 
-toPairS : (a, b) -> PairS a b
+-- TODO: Report bug #1 (total function is not recognised as total)
+toPairS : {A, B : Type} -> (A, B) -> PairS A B
 toPairS (a, b) = pairS a b
 
-fstS : PairS a b -> a
+fstS : {A, B : Type} -> PairS A B -> A
 fstS s = unPairS (\a, b => a) s
 
-sndS : PairS a b -> b
+sndS : {A, B : Type} -> PairS A B -> B
 sndS s = unPairS (\a, b => b) s
+
+test_unPairPairS : unPairS (\a, b => (a, b)) (pairS a b) = (a, b)
+test_unPairPairS = Refl
+
+test_fromPairS : fromPairS (pairS a b) = (a, b)
+test_fromPairS = Refl
+
+-- TODO: Report bug #2 (implicit argument prevents unification)
+-- test_toPairS : toPairS (a, b) = pairS a b
+-- test_toPairS = Refl
+
+test_fstPairS : fstS (pairS a b) = a
+test_fstPairS = Refl
+
+test_sndPairS : sndS (pairS a b) = b
+test_sndPairS = Refl
 
 
 NatS : Type
-NatS = (a : Type) -> (a -> a) -> a -> a
+NatS = {A : Type} -> (A -> A) -> A -> A
 
-unNatS : (a -> a) -> a -> NatS -> a
-unNatS f a s = s _ f a
+unNatS : {A : Type} -> (A -> A) -> A -> NatS -> A
+unNatS f a s = s f a
 
 succS : NatS -> NatS
-succS s = \_, f, a => f (s _ f a)
+succS s = \f, a => f (s f a)
 
 zeroS : NatS
-zeroS = \_, f, a => a
+zeroS = \f, a => a
 
 fromNatS : NatS -> Nat
 fromNatS s = unNatS S Z s
 
+-- TODO: Report bug #1 (total function is not recognised as total)
 toNatS : Nat -> NatS
 toNatS (S n) = succS (toNatS n)
 toNatS Z     = zeroS
-
-
-ListS : Type -> Type
-ListS a = (b : Type) -> (a -> b -> b) -> b -> b
-
-unListS : (a -> b -> b) -> b -> ListS a -> b
-unListS f b s = s _ f b
-
-consS : a -> ListS a -> ListS a
-consS a s = \_, f, b => f a (s _ f b)
-
-nilS : ListS a
-nilS = \_, f, b => b
-
-fromListS : ListS a -> List a
-fromListS s = unListS (::) [] s
-
-toListS : List a -> ListS a
-toListS (a :: as) = consS a (toListS as)
-toListS []        = nilS
-
-
-unBoolTrueSP : unBoolS a a' trueS = a
-unBoolTrueSP = Refl
-
-unBoolFalseSP : unBoolS a a' falseS = a'
-unBoolFalseSP = Refl
-
-fromTrueSP : fromBoolS trueS = True
-fromTrueSP = Refl
-
-fromFalseSP : fromBoolS falseS = False
-fromFalseSP = Refl
-
-toTrueSP : toBoolS True = trueS
-toTrueSP = Refl
-
-toFalseSP : toBoolS False = falseS
-toFalseSP = Refl
-
-
-unMaybeJustSP : unMaybeS f b (justS a) = f a
-unMaybeJustSP = Refl
-
-unMaybeNothingSP : unMaybeS f b nothingS = b
-unMaybeNothingSP = Refl
-
-fromJustSP : fromMaybeS (justS a) = Just a
-fromJustSP = Refl
-
-fromNothingSP : fromMaybeS nothingS = Nothing
-fromNothingSP = Refl
-
-toJustSP : toMaybeS (Just a) = justS a
-toJustSP = Refl
-
-toNothingSP : toMaybeS Nothing = nothingS
-toNothingSP = Refl
-
-
-unEitherLeftSP : unEitherS f g (leftS a) = f a
-unEitherLeftSP = Refl
-
-unEitherRightSP : unEitherS f g (rightS b) = g b
-unEitherRightSP = Refl
-
-fromLeftSP : fromEitherS (leftS a) = Left a
-fromLeftSP = Refl
-
-fromRightSP : fromEitherS (rightS b) = Right b
-fromRightSP = Refl
-
-toLeftSP : toEitherS (Left a) = leftS a
-toLeftSP = Refl
-
-toRightSP : toEitherS (Right b) = rightS b
-toRightSP = Refl
-
-
-unPairPairSP : unPairS (\a, b => (a, b)) (pairS a b) = (a, b)
-unPairPairSP = Refl
-
-fromPairSP : fromPairS (pairS a b) = (a, b)
-fromPairSP = Refl
-
-toPairSP : toPairS (a, b) = pairS a b
-toPairSP = Refl
-
-fstPairSP : fstS (pairS a b) = a
-fstPairSP = Refl
-
-sndPairSP : sndS (pairS a b) = b
-sndPairSP = Refl
-
 
 iterated : Nat -> (a -> a) -> a -> a
 iterated (S n) f a = f (iterated n f a)
 iterated Z f a     = a
 
-iteratedP : (n : Nat) -> iterated n S Z = n
-iteratedP (S n) = rewrite iteratedP n in Refl
-iteratedP Z     = Refl
+test_iterated : (n : Nat) -> iterated n S Z = n
+test_iterated (S n) = rewrite test_iterated n in Refl
+test_iterated Z     = Refl
 
-fromNatSP : (n : Nat) -> fromNatS (iterated n succS zeroS) = n
-fromNatSP (S n) = rewrite fromNatSP n in Refl
-fromNatSP Z     = Refl
+-- TODO: Report bug #2 (implicit argument prevents unification)
+-- test_fromNatS : (n : Nat) -> fromNatS (iterated n succS zeroS) = n
+-- test_fromNatS (S n) = rewrite test_fromNatS n in Refl
+-- test_fromNatS Z     = Refl
 
-toNatSP : (n : Nat) -> toNatS n = iterated n succS zeroS
-toNatSP (S n) = rewrite toNatSP n in Refl
-toNatSP Z = Refl
+-- TODO: Report bug #3 (implicit argument causes non-termination)
+-- test_toNatS : (n : Nat) -> toNatS n = iterated n succS zeroS
+-- test_toNatS (S n) = rewrite test_toNatS n in Refl
+-- test_toNatS Z = Refl
 
 
--- TODO: Use a list of [0 .. n]
+ListS : Type -> Type
+ListS A = {B : Type} -> (A -> B -> B) -> B -> B
 
-fromListSP : (n : Nat) -> fromListS (iterated n (consS ()) nilS) = iterated n (() ::) []
-fromListSP (S n) = rewrite fromListSP n in Refl
-fromListSP Z     = Refl
+unListS : {A, B : Type} -> (A -> B -> B) -> B -> ListS A -> B
+unListS f b s = s f b
 
-toListSP : (n : Nat) -> toListS (iterated n (() ::) []) = iterated n (consS ()) nilS
-toListSP (S n) = rewrite toListSP n in Refl
-toListSP Z     = Refl
+consS : {A : Type} -> A -> ListS A -> ListS A
+consS a s = \f, b => f a (s f b)
+
+nilS : {A : Type} -> ListS A
+nilS = \f, b => b
+
+fromListS : {A : Type} -> ListS A -> List A
+fromListS s = unListS (::) [] s
+
+-- TODO: Report bug #1 (total function is not recognised as total)
+toListS : {A : Type} -> List A -> ListS A
+toListS (a :: as) = consS a (toListS as)
+toListS []        = nilS
