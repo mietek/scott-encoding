@@ -2,22 +2,26 @@ module IScott
 
 %default total
 
+-- NOTE: Issues with scoped implicits:
+-- https://github.com/idris-lang/Idris-dev/issues/2346
+
 
 BoolS : Type
-BoolS = (A : Type) -> A -> A -> A
+BoolS = {A : Type} -> A -> A -> A
 
 unBoolS : {A : Type} -> A -> A -> BoolS -> A
-unBoolS a a' s = s _ a a'
+unBoolS a a' s = s a a'
 
 trueS : BoolS
-trueS = \_, a, a' => a
+trueS = \a, a' => a
 
 falseS : BoolS
-falseS = \_, a, a' => a'
+falseS = \a, a' => a'
 
 fromBoolS : BoolS -> Bool
 fromBoolS s = unBoolS True False s
 
+-- NOTE: Issue #2346 / 1
 toBoolS : Bool -> BoolS
 toBoolS True  = trueS
 toBoolS False = falseS
@@ -34,11 +38,13 @@ test_fromTrueS = Refl
 test_fromFalseS : fromBoolS falseS = False
 test_fromFalseS = Refl
 
-test_toTrueS : toBoolS True = trueS
-test_toTrueS = Refl
+-- NOTE: Issue #2346 / 2
+-- test_toTrueS : toBoolS True = trueS
+-- test_toTrueS = Refl
 
-test_toFalseS : toBoolS False = falseS
-test_toFalseS = Refl
+-- NOTE: Issue #2346 / 2
+-- test_toFalseS : toBoolS False = falseS
+-- test_toFalseS = Refl
 
 
 MaybeS : Type -> Type
@@ -56,7 +62,7 @@ nothingS = \f, b => b
 fromMaybeS : {A : Type} -> MaybeS A -> Maybe A
 fromMaybeS s = unMaybeS Just Nothing s
 
--- TODO: Report bug #1 (total function is not recognised as total)
+-- NOTE: Issue #2346 / 1
 toMaybeS : {A : Type} -> Maybe A -> MaybeS A
 toMaybeS (Just a) = justS a
 toMaybeS Nothing  = nothingS
@@ -73,11 +79,11 @@ test_fromJustS = Refl
 test_fromNothingS : fromMaybeS nothingS = Nothing
 test_fromNothingS = Refl
 
--- TODO: Report bug #2 (implicit argument prevents unification)
+-- NOTE: Issue #2346 / 2
 -- test_toJustS : toMaybeS (Just a) = justS a
 -- test_toJustS = Refl
 
--- TODO: Report bug #2 (implicit argument prevents unification)
+-- NOTE: Issue #2346 / 2
 -- test_toNothingS : toMaybeS Nothing = nothingS
 -- test_toNothingS = Refl
 
@@ -97,7 +103,7 @@ rightS b = \f, g => g b
 fromEitherS : {A, B : Type} -> EitherS A B -> Either A B
 fromEitherS s = unEitherS Left Right s
 
--- TODO: Report bug #1 (total function is not recognised as total)
+-- NOTE: Issue #2346 / 1
 toEitherS : {A, B : Type} -> Either A B -> EitherS A B
 toEitherS (Left a)  = leftS a
 toEitherS (Right b) = rightS b
@@ -114,11 +120,11 @@ test_fromLeftS = Refl
 test_fromRightS : fromEitherS (rightS b) = Right b
 test_fromRightS = Refl
 
--- TODO: Report bug #2 (implicit argument prevents unification)
+-- NOTE: Issue #2346 / 2
 -- test_toLeftS : toEitherS (Left a) = leftS a
 -- test_toLeftS = Refl
 
--- TODO: Report bug #2 (implicit argument prevents unification)
+-- NOTE: Issue #2346 / 2
 -- test_toRightS : toEitherS (Right b) = rightS b
 -- test_toRightS = Refl
 
@@ -135,7 +141,7 @@ pairS a b = \f => f a b
 fromPairS : {A, B : Type} -> PairS A B -> (A, B)
 fromPairS s = unPairS (\a, b => (a, b)) s
 
--- TODO: Report bug #1 (total function is not recognised as total)
+-- NOTE: Issue #2346 / 1
 toPairS : {A, B : Type} -> (A, B) -> PairS A B
 toPairS (a, b) = pairS a b
 
@@ -151,7 +157,7 @@ test_unPairPairS = Refl
 test_fromPairS : fromPairS (pairS a b) = (a, b)
 test_fromPairS = Refl
 
--- TODO: Report bug #2 (implicit argument prevents unification)
+-- NOTE: Issue #2346 / 2
 -- test_toPairS : toPairS (a, b) = pairS a b
 -- test_toPairS = Refl
 
@@ -177,7 +183,7 @@ zeroS = \f, a => a
 fromNatS : NatS -> Nat
 fromNatS s = unNatS S Z s
 
--- TODO: Report bug #1 (total function is not recognised as total)
+-- NOTE: Issue #2346 / 1
 toNatS : Nat -> NatS
 toNatS (S n) = succS (toNatS n)
 toNatS Z     = zeroS
@@ -190,12 +196,12 @@ test_iterated : (n : Nat) -> iterated n S Z = n
 test_iterated (S n) = rewrite test_iterated n in Refl
 test_iterated Z     = Refl
 
--- TODO: Report bug #2 (implicit argument prevents unification)
+-- NOTE: Issue #2346 / 1
 -- test_fromNatS : (n : Nat) -> fromNatS (iterated n succS zeroS) = n
 -- test_fromNatS (S n) = rewrite test_fromNatS n in Refl
 -- test_fromNatS Z     = Refl
 
--- TODO: Report bug #3 (implicit argument causes non-termination)
+-- TODO: Unknown issue
 -- test_toNatS : (n : Nat) -> toNatS n = iterated n succS zeroS
 -- test_toNatS (S n) = rewrite test_toNatS n in Refl
 -- test_toNatS Z = Refl
@@ -216,7 +222,7 @@ nilS = \f, b => b
 fromListS : {A : Type} -> ListS A -> List A
 fromListS s = unListS (::) [] s
 
--- TODO: Report bug #1 (total function is not recognised as total)
+-- NOTE: Issue #2346 / 1
 toListS : {A : Type} -> List A -> ListS A
 toListS (a :: as) = consS a (toListS as)
 toListS []        = nilS
