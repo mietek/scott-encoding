@@ -83,10 +83,10 @@ fromPairS s = unPairS (\a b -> (a , b)) s
 toPairS : {A B : Set} -> A × B -> PairS A B
 toPairS (a , b) = pairS a b
 
-fstS : forall {A B} -> PairS A B -> A
+fstS : {A B : Set} -> PairS A B -> A
 fstS s = unPairS (\a b -> a) s
 
-sndS : forall {A B} -> PairS A B -> B
+sndS : {A B : Set} -> PairS A B -> B
 sndS s = unPairS (\a b -> b) s
 
 
@@ -126,5 +126,5 @@ fromListS : {A : Set} -> ListS A -> List A
 fromListS s = unListS (_∷_) [] s
 
 toListS : {A : Set} -> List A -> ListS A
-toListS (a ∷ as) = consS a (toListS as)
+toListS (a ∷ aa) = consS a (toListS aa)
 toListS []       = nilS

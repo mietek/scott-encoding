@@ -117,5 +117,5 @@ fromListS :: ListS a -> [a]
 fromListS s = unListS (:) [] s
 
 toListS :: [a] -> ListS a
-toListS (a : as) = consS a (toListS as)
+toListS (a : aa) = consS a (toListS aa)
 toListS []       = nilS

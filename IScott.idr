@@ -224,5 +224,5 @@ fromListS s = unListS (::) [] s
 
 -- NOTE: Issue #2346 / 1
 toListS : {A : Type} -> List A -> ListS A
-toListS (a :: as) = consS a (toListS as)
+toListS (a :: aa) = consS a (toListS aa)
 toListS []        = nilS
