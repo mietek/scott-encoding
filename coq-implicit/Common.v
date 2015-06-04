@@ -1,11 +1,11 @@
 Section Common.
 
-(*
-NOTE: Issue with scoped implicits:
-"Warning: Ignoring implicit status of product binder A and following binders"
-*)
+(* NOTE: Issues with scoped implicits:
+ * 1. "Warning: Ignoring implicit status of product binder A and following binders"
+ *)
 
 
+(* NOTE: Issue 1 *)
 Definition BoolS : Type :=
   forall {A : Type}, A -> A -> A.
 
@@ -28,6 +28,7 @@ Definition toBoolS : bool -> BoolS :=
   end.
 
 
+(* NOTE: Issue 1 *)
 Definition MaybeS (A : Type) : Type :=
   forall {B : Type}, (A -> B) -> B -> B.
 
@@ -50,6 +51,7 @@ Definition toMaybeS {A : Type} : option A -> MaybeS A :=
   end.
 
 
+(* NOTE: Issue 1 *)
 Definition EitherS (A B : Type) : Type :=
   forall {C : Type}, (A -> C) -> (B -> C) -> C.
 
@@ -72,6 +74,7 @@ Definition toEitherS {A B : Type} : A + B -> EitherS A B :=
   end.
 
 
+(* NOTE: Issue 1 *)
 Definition PairS (A B : Type) : Type :=
   forall {C : Type}, (A -> B -> C) -> C.
 

@@ -1,11 +1,11 @@
 Section BoehmBerarducci.
 
-(*
-NOTE: Issue with scoped implicits:
-"Warning: Ignoring implicit status of product binder A and following binders"
-*)
+(* NOTE: Issues with scoped implicits:
+ * 1. "Warning: Ignoring implicit status of product binder A and following binders"
+ *)
 
 
+(* NOTE: Issue 1 *)
 Definition NatS : Type :=
   forall {A : Type}, (A -> A) -> A -> A.
 
@@ -29,6 +29,7 @@ Definition toNatS : nat -> NatS :=
     end.
 
 
+(* NOTE: Issue 1 *)
 Definition ListS (A : Type) : Type :=
   forall {B : Type}, (A -> B -> B) -> B -> B.
 
