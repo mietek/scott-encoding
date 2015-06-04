@@ -7,7 +7,7 @@ BoolQ : Type
 BoolQ = (A : Type) -> A -> A -> A
 
 unBoolQ : {A : Type} -> A -> A -> BoolQ -> A
-unBoolQ a a' s = s _ a a'
+unBoolQ a a' q = q _ a a'
 
 trueQ : BoolQ
 trueQ = \_, a, a' => a
@@ -16,7 +16,7 @@ falseQ : BoolQ
 falseQ = \_, a, a' => a'
 
 fromBoolQ : BoolQ -> Bool
-fromBoolQ s = unBoolQ True False s
+fromBoolQ q = unBoolQ True False q
 
 toBoolQ : Bool -> BoolQ
 toBoolQ True  = trueQ
@@ -45,7 +45,7 @@ MaybeQ : Type -> Type
 MaybeQ A = (B : Type) -> (A -> B) -> B -> B
 
 unMaybeQ : {A, B : Type} -> (A -> B) -> B -> MaybeQ A -> B
-unMaybeQ f b s = s _ f b
+unMaybeQ f b q = q _ f b
 
 justQ : {A : Type} -> A -> MaybeQ A
 justQ a = \_, f, b => f a
@@ -54,7 +54,7 @@ nothingQ : {A : Type} -> MaybeQ A
 nothingQ = \_, f, b => b
 
 fromMaybeQ : {A : Type} -> MaybeQ A -> Maybe A
-fromMaybeQ s = unMaybeQ Just Nothing s
+fromMaybeQ q = unMaybeQ Just Nothing q
 
 toMaybeQ : {A : Type} -> Maybe A -> MaybeQ A
 toMaybeQ (Just a) = justQ a
@@ -83,7 +83,7 @@ EitherQ : Type -> Type -> Type
 EitherQ A B = (C : Type) -> (A -> C) -> (B -> C) -> C
 
 unEitherQ : {A, B, C : Type} -> (A -> C) -> (B -> C) -> EitherQ A B -> C
-unEitherQ f g s = s _ f g
+unEitherQ f g q = q _ f g
 
 leftQ : {A, B : Type} -> A -> EitherQ A B
 leftQ a = \_, f, g => f a
@@ -92,7 +92,7 @@ rightQ : {A, B : Type} -> B -> EitherQ A B
 rightQ b = \_, f, g => g b
 
 fromEitherQ : {A, B : Type} -> EitherQ A B -> Either A B
-fromEitherQ s = unEitherQ Left Right s
+fromEitherQ q = unEitherQ Left Right q
 
 toEitherQ : {A, B : Type} -> Either A B -> EitherQ A B
 toEitherQ (Left a)  = leftQ a
@@ -121,22 +121,22 @@ PairQ : Type -> Type -> Type
 PairQ A B = (C : Type) -> (A -> B -> C) -> C
 
 unPairQ : {A, B, C : Type} -> (A -> B -> C) -> PairQ A B -> C
-unPairQ f s = s _ f
+unPairQ f q = q _ f
 
 pairQ : {A, B : Type} -> A -> B -> PairQ A B
 pairQ a b = \_, f => f a b
 
 fromPairQ : {A, B : Type} -> PairQ A B -> (A, B)
-fromPairQ s = unPairQ (\a, b => (a, b)) s
+fromPairQ q = unPairQ (\a, b => (a, b)) q
 
 toPairQ : {A, B : Type} -> (A, B) -> PairQ A B
 toPairQ (a, b) = pairQ a b
 
 fstQ : {A, B : Type} -> PairQ A B -> A
-fstQ s = unPairQ (\a, b => a) s
+fstQ q = unPairQ (\a, b => a) q
 
 sndQ : {A, B : Type} -> PairQ A B -> B
-sndQ s = unPairQ (\a, b => b) s
+sndQ q = unPairQ (\a, b => b) q
 
 test_unPairPairQ : unPairQ (\a, b => (a, b)) (pairQ a b) = (a, b)
 test_unPairPairQ = Refl

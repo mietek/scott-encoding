@@ -1,4 +1,4 @@
-DIGEST d0b6c84b7eb9e0c2e224769c46ae16cc
+DIGEST d127c924564f84ddaa15c4abdccfabab
 FCommon
 sec 8:13 <> Common
 def 29:33 <> BoolQ
@@ -10,7 +10,7 @@ R129:129 Common <> A var
 R120:124 Common <> BoolQ def
 R115:115 Common <> A var
 R110:110 Common <> A var
-R150:150 Common <> s var
+R150:150 Common <> q var
 R156:157 Common <> a' var
 R154:154 Common <> a var
 def 172:176 <> trueQ
@@ -23,7 +23,7 @@ def 270:278 <> fromBoolQ
 R291:294 Coq.Init.Datatypes <> bool ind
 R282:286 Common <> BoolQ def
 R310:316 Common <> unBoolQ def
-R329:329 Common <> s var
+R329:329 Common <> q var
 R323:327 Coq.Init.Datatypes <> false constr
 R318:321 Coq.Init.Datatypes <> true constr
 def 344:350 <> toBoolQ
@@ -46,7 +46,7 @@ R585:585 Common <> A var
 R573:573 Common <> B var
 R567:567 Common <> B var
 R562:562 Common <> A var
-R610:610 Common <> s var
+R610:610 Common <> q var
 R616:616 Common <> b var
 R614:614 Common <> f var
 def 631:635 <> justQ
@@ -65,7 +65,7 @@ R815:815 Common <> A var
 R796:801 Common <> MaybeQ def
 R803:803 Common <> A var
 R831:838 Common <> unMaybeQ def
-R863:863 Common <> s var
+R863:863 Common <> q var
 R858:861 Coq.Init.Datatypes <> None constr
 R850:853 Coq.Init.Datatypes <> Some constr
 R855:855 Common <> a var
@@ -94,7 +94,7 @@ R1151:1151 Common <> C var
 R1146:1146 Common <> B var
 R1139:1139 Common <> C var
 R1134:1134 Common <> A var
-R1192:1192 Common <> s var
+R1192:1192 Common <> q var
 R1198:1198 Common <> g var
 R1196:1196 Common <> f var
 def 1213:1217 <> leftQ
@@ -119,7 +119,7 @@ R1405:1411 Common <> EitherQ def
 R1415:1415 Common <> B var
 R1413:1413 Common <> A var
 R1440:1448 Common <> unEitherQ def
-R1458:1458 Common <> s var
+R1458:1458 Common <> q var
 R1454:1456 Coq.Init.Datatypes <> inr constr
 R1450:1452 Coq.Init.Datatypes <> inl constr
 def 1473:1481 <> toEitherQ
@@ -147,7 +147,7 @@ R1741:1741 Common <> A var
 R1729:1729 Common <> C var
 R1724:1724 Common <> B var
 R1719:1719 Common <> A var
-R1766:1766 Common <> s var
+R1766:1766 Common <> q var
 R1770:1770 Common <> f var
 def 1785:1789 <> pairQ
 R1816:1820 Common <> PairQ def
@@ -166,7 +166,7 @@ R1897:1901 Common <> PairQ def
 R1905:1905 Common <> B var
 R1903:1903 Common <> A var
 R1930:1936 Common <> unPairQ def
-R1958:1958 Common <> s var
+R1958:1958 Common <> q var
 R1950:1950 Coq.Init.Datatypes <> :core_scope:'('_x_','_x_','_'..'_','_x_')' not
 R1952:1953 Coq.Init.Datatypes <> :core_scope:'('_x_','_x_','_'..'_','_x_')' not
 R1955:1955 Coq.Init.Datatypes <> :core_scope:'('_x_','_x_','_'..'_','_x_')' not
@@ -190,7 +190,7 @@ R2107:2111 Common <> PairQ def
 R2115:2115 Common <> B var
 R2113:2113 Common <> A var
 R2136:2142 Common <> unPairQ def
-R2159:2159 Common <> s var
+R2159:2159 Common <> q var
 R2156:2156 Common <> a var
 def 2174:2177 <> sndQ
 R2207:2207 Common <> B var
@@ -198,6 +198,6 @@ R2194:2198 Common <> PairQ def
 R2202:2202 Common <> B var
 R2200:2200 Common <> A var
 R2223:2229 Common <> unPairQ def
-R2246:2246 Common <> s var
+R2246:2246 Common <> q var
 R2243:2243 Common <> b var
 R2255:2260 Common Common <> sec

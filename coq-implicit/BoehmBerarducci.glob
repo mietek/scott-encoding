@@ -1,4 +1,4 @@
-DIGEST e49a44128fbcbca383caa44f7f8fcc74
+DIGEST 97a4017a1ac6dabf2ae76074ddc10781
 FBoehmBerarducci
 sec 8:22 <> BoehmBerarducci
 def 186:189 <> NatQ
@@ -12,14 +12,14 @@ R291:294 BoehmBerarducci <> NatQ def
 R286:286 BoehmBerarducci <> A var
 R280:280 BoehmBerarducci <> A var
 R275:275 BoehmBerarducci <> A var
-R319:319 BoehmBerarducci <> s var
+R319:319 BoehmBerarducci <> q var
 R325:325 BoehmBerarducci <> a var
 R323:323 BoehmBerarducci <> f var
 def 340:344 <> succQ
 R356:359 BoehmBerarducci <> NatQ def
 R348:351 BoehmBerarducci <> NatQ def
 R388:388 BoehmBerarducci <> f var
-R391:391 BoehmBerarducci <> s var
+R391:391 BoehmBerarducci <> q var
 R397:397 BoehmBerarducci <> a var
 R395:395 BoehmBerarducci <> f var
 def 413:417 <> zeroQ
@@ -29,7 +29,7 @@ def 459:466 <> fromNatQ
 R478:480 Coq.Init.Datatypes <> nat ind
 R470:473 BoehmBerarducci <> NatQ def
 R496:501 BoehmBerarducci <> unNatQ def
-R507:507 BoehmBerarducci <> s var
+R507:507 BoehmBerarducci <> q var
 R505:505 Coq.Init.Datatypes <> O constr
 R503:503 Coq.Init.Datatypes <> S constr
 def 522:527 <> toNatQ
@@ -55,7 +55,7 @@ R795:795 BoehmBerarducci <> B var
 R789:789 BoehmBerarducci <> B var
 R784:784 BoehmBerarducci <> B var
 R779:779 BoehmBerarducci <> A var
-R831:831 BoehmBerarducci <> s var
+R831:831 BoehmBerarducci <> q var
 R837:837 BoehmBerarducci <> b var
 R835:835 BoehmBerarducci <> f var
 def 852:856 <> consQ
@@ -65,7 +65,7 @@ R876:880 BoehmBerarducci <> ListQ def
 R882:882 BoehmBerarducci <> A var
 R871:871 BoehmBerarducci <> A var
 R924:924 BoehmBerarducci <> f var
-R929:929 BoehmBerarducci <> s var
+R929:929 BoehmBerarducci <> q var
 R935:935 BoehmBerarducci <> b var
 R933:933 BoehmBerarducci <> f var
 R926:926 BoehmBerarducci <> a var
@@ -79,7 +79,7 @@ R1049:1049 BoehmBerarducci <> A var
 R1033:1037 BoehmBerarducci <> ListQ def
 R1039:1039 BoehmBerarducci <> A var
 R1065:1071 BoehmBerarducci <> unListQ def
-R1101:1101 BoehmBerarducci <> s var
+R1101:1101 BoehmBerarducci <> q var
 R1097:1099 Coq.Init.Datatypes <> nil constr
 R1086:1089 Coq.Init.Datatypes <> cons constr
 R1093:1094 BoehmBerarducci <> xs var

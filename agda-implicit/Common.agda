@@ -10,7 +10,7 @@ BoolQ : Set₁
 BoolQ = {A : Set} -> A -> A -> A
 
 unBoolQ : {A : Set} -> A -> A -> BoolQ -> A
-unBoolQ a a' s = s a a'
+unBoolQ a a' q = q a a'
 
 trueQ : BoolQ
 trueQ = \a a' -> a
@@ -19,7 +19,7 @@ falseQ : BoolQ
 falseQ = \a a' -> a'
 
 fromBoolQ : BoolQ -> Bool
-fromBoolQ s = unBoolQ true false s
+fromBoolQ q = unBoolQ true false q
 
 toBoolQ : Bool -> BoolQ
 toBoolQ true  = trueQ
@@ -30,7 +30,7 @@ MaybeQ : Set -> Set₁
 MaybeQ A = {B : Set} -> (A -> B) -> B -> B
 
 unMaybeQ : {A B : Set} -> (A -> B) -> B -> MaybeQ A -> B
-unMaybeQ f b s = s f b
+unMaybeQ f b q = q f b
 
 justQ : {A : Set} -> A -> MaybeQ A
 justQ a = \f b -> f a
@@ -39,7 +39,7 @@ nothingQ : {A : Set} -> MaybeQ A
 nothingQ = \f b -> b
 
 fromMaybeQ : {A : Set} -> MaybeQ A -> Maybe A
-fromMaybeQ s = unMaybeQ just nothing s
+fromMaybeQ q = unMaybeQ just nothing q
 
 toMaybeQ : {A : Set} -> Maybe A -> MaybeQ A
 toMaybeQ (just a) = justQ a
@@ -50,7 +50,7 @@ EitherQ : Set -> Set -> Set₁
 EitherQ A B = {C : Set} -> (A -> C) -> (B -> C) -> C
 
 unEitherQ : {A B C : Set} -> (A -> C) -> (B -> C) -> EitherQ A B -> C
-unEitherQ f g s = s f g
+unEitherQ f g q = q f g
 
 leftQ : {A B : Set} -> A -> EitherQ A B
 leftQ a = \f g -> f a
@@ -59,7 +59,7 @@ rightQ : {A B : Set} -> B -> EitherQ A B
 rightQ b = \f g -> g b
 
 fromEitherQ : {A B : Set} -> EitherQ A B -> A ⊎ B
-fromEitherQ s = unEitherQ inj₁ inj₂ s
+fromEitherQ q = unEitherQ inj₁ inj₂ q
 
 toEitherQ : {A B : Set} -> A ⊎ B -> EitherQ A B
 toEitherQ (inj₁ a) = leftQ a
@@ -70,19 +70,19 @@ PairQ : Set -> Set -> Set₁
 PairQ A B = {C : Set} -> (A -> B -> C) -> C
 
 unPairQ : {A B C : Set} -> (A -> B -> C) -> PairQ A B -> C
-unPairQ f s = s f
+unPairQ f q = q f
 
 pairQ : {A B : Set} -> A -> B -> PairQ A B
 pairQ a b = \f -> f a b
 
 fromPairQ : {A B : Set} -> PairQ A B -> A × B
-fromPairQ s = unPairQ (\a b -> (a , b)) s
+fromPairQ q = unPairQ (\a b -> (a , b)) q
 
 toPairQ : {A B : Set} -> A × B -> PairQ A B
 toPairQ (a , b) = pairQ a b
 
 fstQ : {A B : Set} -> PairQ A B -> A
-fstQ s = unPairQ (\a b -> a) s
+fstQ q = unPairQ (\a b -> a) q
 
 sndQ : {A B : Set} -> PairQ A B -> B
-sndQ s = unPairQ (\a b -> b) s
+sndQ q = unPairQ (\a b -> b) q

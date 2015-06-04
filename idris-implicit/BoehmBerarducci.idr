@@ -10,16 +10,16 @@ NatQ : Type
 NatQ = {A : Type} -> (A -> A) -> A -> A
 
 unNatQ : {A : Type} -> (A -> A) -> A -> NatQ -> A
-unNatQ f a s = s f a
+unNatQ f a q = q f a
 
 succQ : NatQ -> NatQ
-succQ s = \f, a => f (s f a)
+succQ q = \f, a => f (q f a)
 
 zeroQ : NatQ
 zeroQ = \f, a => a
 
 fromNatQ : NatQ -> Nat
-fromNatQ s = unNatQ S Z s
+fromNatQ q = unNatQ S Z q
 
 -- NOTE: Issue #2346 / 1
 toNatQ : Nat -> NatQ
@@ -49,16 +49,16 @@ ListQ : Type -> Type
 ListQ A = {B : Type} -> (A -> B -> B) -> B -> B
 
 unListQ : {A, B : Type} -> (A -> B -> B) -> B -> ListQ A -> B
-unListQ f b s = s f b
+unListQ f b q = q f b
 
 consQ : {A : Type} -> A -> ListQ A -> ListQ A
-consQ a s = \f, b => f a (s f b)
+consQ a q = \f, b => f a (q f b)
 
 nilQ : {A : Type} -> ListQ A
 nilQ = \f, b => b
 
 fromListQ : {A : Type} -> ListQ A -> List A
-fromListQ s = unListQ (::) [] s
+fromListQ q = unListQ (::) [] q
 
 -- NOTE: Issue #2346 / 1
 toListQ : {A : Type} -> List A -> ListQ A
