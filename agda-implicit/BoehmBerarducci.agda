@@ -4,41 +4,41 @@ open import Data.Nat
 open import Data.List
 
 
-NatS : Set₁
-NatS = {A : Set} -> (A -> A) -> A -> A
+NatQ : Set₁
+NatQ = {A : Set} -> (A -> A) -> A -> A
 
-unNatS : {A : Set} -> (A -> A) -> A -> NatS -> A
-unNatS f a s = s f a
+unNatQ : {A : Set} -> (A -> A) -> A -> NatQ -> A
+unNatQ f a s = s f a
 
-succS : NatS -> NatS
-succS s = \f a -> f (s f a)
+succQ : NatQ -> NatQ
+succQ s = \f a -> f (s f a)
 
-zeroS : NatS
-zeroS = \f a -> a
+zeroQ : NatQ
+zeroQ = \f a -> a
 
-fromNatS : NatS -> ℕ
-fromNatS s = unNatS suc zero s
+fromNatQ : NatQ -> ℕ
+fromNatQ s = unNatQ suc zero s
 
-toNatS : ℕ -> NatS
-toNatS (suc n) = succS (toNatS n)
-toNatS zero    = zeroS
+toNatQ : ℕ -> NatQ
+toNatQ (suc n) = succQ (toNatQ n)
+toNatQ zero    = zeroQ
 
 
-ListS : Set -> Set₁
-ListS A = {B : Set} -> (A -> B -> B) -> B -> B
+ListQ : Set -> Set₁
+ListQ A = {B : Set} -> (A -> B -> B) -> B -> B
 
-unListS : {A B : Set} -> (A -> B -> B) -> B -> ListS A -> B
-unListS f b s = s f b
+unListQ : {A B : Set} -> (A -> B -> B) -> B -> ListQ A -> B
+unListQ f b s = s f b
 
-consS : {A : Set} -> A -> ListS A -> ListS A
-consS a s = \f b -> f a (s f b)
+consQ : {A : Set} -> A -> ListQ A -> ListQ A
+consQ a s = \f b -> f a (s f b)
 
-nilS : {A : Set} -> ListS A
-nilS = \f b -> b
+nilQ : {A : Set} -> ListQ A
+nilQ = \f b -> b
 
-fromListS : {A : Set} -> ListS A -> List A
-fromListS s = unListS (_∷_) [] s
+fromListQ : {A : Set} -> ListQ A -> List A
+fromListQ s = unListQ (_∷_) [] s
 
-toListS : {A : Set} -> List A -> ListS A
-toListS (a ∷ aa) = consS a (toListS aa)
-toListS []       = nilS
+toListQ : {A : Set} -> List A -> ListQ A
+toListQ (a ∷ aa) = consQ a (toListQ aa)
+toListQ []       = nilQ

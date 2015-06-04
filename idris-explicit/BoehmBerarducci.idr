@@ -3,24 +3,24 @@ module BoehmBerarducci
 %default total
 
 
-NatS : Type
-NatS = (A : Type) -> (A -> A) -> A -> A
+NatQ : Type
+NatQ = (A : Type) -> (A -> A) -> A -> A
 
-unNatS : {A : Type} -> (A -> A) -> A -> NatS -> A
-unNatS f a s = s _ f a
+unNatQ : {A : Type} -> (A -> A) -> A -> NatQ -> A
+unNatQ f a s = s _ f a
 
-succS : NatS -> NatS
-succS s = \_, f, a => f (s _ f a)
+succQ : NatQ -> NatQ
+succQ s = \_, f, a => f (s _ f a)
 
-zeroS : NatS
-zeroS = \_, f, a => a
+zeroQ : NatQ
+zeroQ = \_, f, a => a
 
-fromNatS : NatS -> Nat
-fromNatS s = unNatS S Z s
+fromNatQ : NatQ -> Nat
+fromNatQ s = unNatQ S Z s
 
-toNatS : Nat -> NatS
-toNatS (S n) = succS (toNatS n)
-toNatS Z     = zeroS
+toNatQ : Nat -> NatQ
+toNatQ (S n) = succQ (toNatQ n)
+toNatQ Z     = zeroQ
 
 iterated : Nat -> (a -> a) -> a -> a
 iterated (S n) f a = f (iterated n f a)
@@ -30,30 +30,30 @@ test_iterated : (n : Nat) -> iterated n S Z = n
 test_iterated (S n) = rewrite test_iterated n in Refl
 test_iterated Z     = Refl
 
-test_fromNatS : (n : Nat) -> fromNatS (iterated n succS zeroS) = n
-test_fromNatS (S n) = rewrite test_fromNatS n in Refl
-test_fromNatS Z     = Refl
+test_fromNatQ : (n : Nat) -> fromNatQ (iterated n succQ zeroQ) = n
+test_fromNatQ (S n) = rewrite test_fromNatQ n in Refl
+test_fromNatQ Z     = Refl
 
-test_toNatS : (n : Nat) -> toNatS n = iterated n succS zeroS
-test_toNatS (S n) = rewrite test_toNatS n in Refl
-test_toNatS Z = Refl
+test_toNatQ : (n : Nat) -> toNatQ n = iterated n succQ zeroQ
+test_toNatQ (S n) = rewrite test_toNatQ n in Refl
+test_toNatQ Z = Refl
 
 
-ListS : Type -> Type
-ListS A = (B : Type) -> (A -> B -> B) -> B -> B
+ListQ : Type -> Type
+ListQ A = (B : Type) -> (A -> B -> B) -> B -> B
 
-unListS : {A, B : Type} -> (A -> B -> B) -> B -> ListS A -> B
-unListS f b s = s _ f b
+unListQ : {A, B : Type} -> (A -> B -> B) -> B -> ListQ A -> B
+unListQ f b s = s _ f b
 
-consS : {A : Type} -> A -> ListS A -> ListS A
-consS a s = \_, f, b => f a (s _ f b)
+consQ : {A : Type} -> A -> ListQ A -> ListQ A
+consQ a s = \_, f, b => f a (s _ f b)
 
-nilS : {A : Type} -> ListS A
-nilS = \_, f, b => b
+nilQ : {A : Type} -> ListQ A
+nilQ = \_, f, b => b
 
-fromListS : {A : Type} -> ListS A -> List A
-fromListS s = unListS (::) [] s
+fromListQ : {A : Type} -> ListQ A -> List A
+fromListQ s = unListQ (::) [] s
 
-toListS : {A : Type} -> List A -> ListS A
-toListS (a :: aa) = consS a (toListS aa)
-toListS []        = nilS
+toListQ : {A : Type} -> List A -> ListQ A
+toListQ (a :: aa) = consQ a (toListQ aa)
+toListQ []        = nilQ

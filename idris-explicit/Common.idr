@@ -3,152 +3,152 @@ module Common
 %default total
 
 
-BoolS : Type
-BoolS = (A : Type) -> A -> A -> A
+BoolQ : Type
+BoolQ = (A : Type) -> A -> A -> A
 
-unBoolS : {A : Type} -> A -> A -> BoolS -> A
-unBoolS a a' s = s _ a a'
+unBoolQ : {A : Type} -> A -> A -> BoolQ -> A
+unBoolQ a a' s = s _ a a'
 
-trueS : BoolS
-trueS = \_, a, a' => a
+trueQ : BoolQ
+trueQ = \_, a, a' => a
 
-falseS : BoolS
-falseS = \_, a, a' => a'
+falseQ : BoolQ
+falseQ = \_, a, a' => a'
 
-fromBoolS : BoolS -> Bool
-fromBoolS s = unBoolS True False s
+fromBoolQ : BoolQ -> Bool
+fromBoolQ s = unBoolQ True False s
 
-toBoolS : Bool -> BoolS
-toBoolS True  = trueS
-toBoolS False = falseS
+toBoolQ : Bool -> BoolQ
+toBoolQ True  = trueQ
+toBoolQ False = falseQ
 
-test_unBoolTrueS : unBoolS a a' trueS = a
-test_unBoolTrueS = Refl
+test_unBoolTrueQ : unBoolQ a a' trueQ = a
+test_unBoolTrueQ = Refl
 
-test_unBoolFalseS : unBoolS a a' falseS = a'
-test_unBoolFalseS = Refl
+test_unBoolFalseQ : unBoolQ a a' falseQ = a'
+test_unBoolFalseQ = Refl
 
-test_fromTrueS : fromBoolS trueS = True
-test_fromTrueS = Refl
+test_fromTrueQ : fromBoolQ trueQ = True
+test_fromTrueQ = Refl
 
-test_fromFalseS : fromBoolS falseS = False
-test_fromFalseS = Refl
+test_fromFalseQ : fromBoolQ falseQ = False
+test_fromFalseQ = Refl
 
-test_toTrueS : toBoolS True = trueS
-test_toTrueS = Refl
+test_toTrueQ : toBoolQ True = trueQ
+test_toTrueQ = Refl
 
-test_toFalseS : toBoolS False = falseS
-test_toFalseS = Refl
-
-
-MaybeS : Type -> Type
-MaybeS A = (B : Type) -> (A -> B) -> B -> B
-
-unMaybeS : {A, B : Type} -> (A -> B) -> B -> MaybeS A -> B
-unMaybeS f b s = s _ f b
-
-justS : {A : Type} -> A -> MaybeS A
-justS a = \_, f, b => f a
-
-nothingS : {A : Type} -> MaybeS A
-nothingS = \_, f, b => b
-
-fromMaybeS : {A : Type} -> MaybeS A -> Maybe A
-fromMaybeS s = unMaybeS Just Nothing s
-
-toMaybeS : {A : Type} -> Maybe A -> MaybeS A
-toMaybeS (Just a) = justS a
-toMaybeS Nothing  = nothingS
-
-test_unMaybeJustS : unMaybeS f b (justS a) = f a
-test_unMaybeJustS = Refl
-
-test_unMaybeNothingS : unMaybeS f b nothingS = b
-test_unMaybeNothingS = Refl
-
-test_fromJustS : fromMaybeS (justS a) = Just a
-test_fromJustS = Refl
-
-test_fromNothingS : fromMaybeS nothingS = Nothing
-test_fromNothingS = Refl
-
-test_toJustS : toMaybeS (Just a) = justS a
-test_toJustS = Refl
-
-test_toNothingS : toMaybeS Nothing = nothingS
-test_toNothingS = Refl
+test_toFalseQ : toBoolQ False = falseQ
+test_toFalseQ = Refl
 
 
-EitherS : Type -> Type -> Type
-EitherS A B = (C : Type) -> (A -> C) -> (B -> C) -> C
+MaybeQ : Type -> Type
+MaybeQ A = (B : Type) -> (A -> B) -> B -> B
 
-unEitherS : {A, B, C : Type} -> (A -> C) -> (B -> C) -> EitherS A B -> C
-unEitherS f g s = s _ f g
+unMaybeQ : {A, B : Type} -> (A -> B) -> B -> MaybeQ A -> B
+unMaybeQ f b s = s _ f b
 
-leftS : {A, B : Type} -> A -> EitherS A B
-leftS a = \_, f, g => f a
+justQ : {A : Type} -> A -> MaybeQ A
+justQ a = \_, f, b => f a
 
-rightS : {A, B : Type} -> B -> EitherS A B
-rightS b = \_, f, g => g b
+nothingQ : {A : Type} -> MaybeQ A
+nothingQ = \_, f, b => b
 
-fromEitherS : {A, B : Type} -> EitherS A B -> Either A B
-fromEitherS s = unEitherS Left Right s
+fromMaybeQ : {A : Type} -> MaybeQ A -> Maybe A
+fromMaybeQ s = unMaybeQ Just Nothing s
 
-toEitherS : {A, B : Type} -> Either A B -> EitherS A B
-toEitherS (Left a)  = leftS a
-toEitherS (Right b) = rightS b
+toMaybeQ : {A : Type} -> Maybe A -> MaybeQ A
+toMaybeQ (Just a) = justQ a
+toMaybeQ Nothing  = nothingQ
 
-test_unEitherLeftS : unEitherS f g (leftS a) = f a
-test_unEitherLeftS = Refl
+test_unMaybeJustQ : unMaybeQ f b (justQ a) = f a
+test_unMaybeJustQ = Refl
 
-test_unEitherRightS : unEitherS f g (rightS b) = g b
-test_unEitherRightS = Refl
+test_unMaybeNothingQ : unMaybeQ f b nothingQ = b
+test_unMaybeNothingQ = Refl
 
-test_fromLeftS : fromEitherS (leftS a) = Left a
-test_fromLeftS = Refl
+test_fromJustQ : fromMaybeQ (justQ a) = Just a
+test_fromJustQ = Refl
 
-test_fromRightS : fromEitherS (rightS b) = Right b
-test_fromRightS = Refl
+test_fromNothingQ : fromMaybeQ nothingQ = Nothing
+test_fromNothingQ = Refl
 
-test_toLeftS : toEitherS (Left a) = leftS a
-test_toLeftS = Refl
+test_toJustQ : toMaybeQ (Just a) = justQ a
+test_toJustQ = Refl
 
-test_toRightS : toEitherS (Right b) = rightS b
-test_toRightS = Refl
+test_toNothingQ : toMaybeQ Nothing = nothingQ
+test_toNothingQ = Refl
 
 
-PairS : Type -> Type -> Type
-PairS A B = (C : Type) -> (A -> B -> C) -> C
+EitherQ : Type -> Type -> Type
+EitherQ A B = (C : Type) -> (A -> C) -> (B -> C) -> C
 
-unPairS : {A, B, C : Type} -> (A -> B -> C) -> PairS A B -> C
-unPairS f s = s _ f
+unEitherQ : {A, B, C : Type} -> (A -> C) -> (B -> C) -> EitherQ A B -> C
+unEitherQ f g s = s _ f g
 
-pairS : {A, B : Type} -> A -> B -> PairS A B
-pairS a b = \_, f => f a b
+leftQ : {A, B : Type} -> A -> EitherQ A B
+leftQ a = \_, f, g => f a
 
-fromPairS : {A, B : Type} -> PairS A B -> (A, B)
-fromPairS s = unPairS (\a, b => (a, b)) s
+rightQ : {A, B : Type} -> B -> EitherQ A B
+rightQ b = \_, f, g => g b
 
-toPairS : {A, B : Type} -> (A, B) -> PairS A B
-toPairS (a, b) = pairS a b
+fromEitherQ : {A, B : Type} -> EitherQ A B -> Either A B
+fromEitherQ s = unEitherQ Left Right s
 
-fstS : {A, B : Type} -> PairS A B -> A
-fstS s = unPairS (\a, b => a) s
+toEitherQ : {A, B : Type} -> Either A B -> EitherQ A B
+toEitherQ (Left a)  = leftQ a
+toEitherQ (Right b) = rightQ b
 
-sndS : {A, B : Type} -> PairS A B -> B
-sndS s = unPairS (\a, b => b) s
+test_unEitherLeftQ : unEitherQ f g (leftQ a) = f a
+test_unEitherLeftQ = Refl
 
-test_unPairPairS : unPairS (\a, b => (a, b)) (pairS a b) = (a, b)
-test_unPairPairS = Refl
+test_unEitherRightQ : unEitherQ f g (rightQ b) = g b
+test_unEitherRightQ = Refl
 
-test_fromPairS : fromPairS (pairS a b) = (a, b)
-test_fromPairS = Refl
+test_fromLeftQ : fromEitherQ (leftQ a) = Left a
+test_fromLeftQ = Refl
 
-test_toPairS : toPairS (a, b) = pairS a b
-test_toPairS = Refl
+test_fromRightQ : fromEitherQ (rightQ b) = Right b
+test_fromRightQ = Refl
 
-test_fstPairS : fstS (pairS a b) = a
-test_fstPairS = Refl
+test_toLeftQ : toEitherQ (Left a) = leftQ a
+test_toLeftQ = Refl
 
-test_sndPairS : sndS (pairS a b) = b
-test_sndPairS = Refl
+test_toRightQ : toEitherQ (Right b) = rightQ b
+test_toRightQ = Refl
+
+
+PairQ : Type -> Type -> Type
+PairQ A B = (C : Type) -> (A -> B -> C) -> C
+
+unPairQ : {A, B, C : Type} -> (A -> B -> C) -> PairQ A B -> C
+unPairQ f s = s _ f
+
+pairQ : {A, B : Type} -> A -> B -> PairQ A B
+pairQ a b = \_, f => f a b
+
+fromPairQ : {A, B : Type} -> PairQ A B -> (A, B)
+fromPairQ s = unPairQ (\a, b => (a, b)) s
+
+toPairQ : {A, B : Type} -> (A, B) -> PairQ A B
+toPairQ (a, b) = pairQ a b
+
+fstQ : {A, B : Type} -> PairQ A B -> A
+fstQ s = unPairQ (\a, b => a) s
+
+sndQ : {A, B : Type} -> PairQ A B -> B
+sndQ s = unPairQ (\a, b => b) s
+
+test_unPairPairQ : unPairQ (\a, b => (a, b)) (pairQ a b) = (a, b)
+test_unPairPairQ = Refl
+
+test_fromPairQ : fromPairQ (pairQ a b) = (a, b)
+test_fromPairQ = Refl
+
+test_toPairQ : toPairQ (a, b) = pairQ a b
+test_toPairQ = Refl
+
+test_fstPairQ : fstQ (pairQ a b) = a
+test_fstPairQ = Refl
+
+test_sndPairQ : sndQ (pairQ a b) = b
+test_sndPairQ = Refl

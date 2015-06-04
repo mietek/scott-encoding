@@ -3,79 +3,79 @@
 module Common where
 
 
-type BoolS = forall a. a -> a -> a
+type BoolQ = forall a. a -> a -> a
 
-unBoolS :: a -> a -> BoolS -> a
-unBoolS a a' s = s a a'
+unBoolQ :: a -> a -> BoolQ -> a
+unBoolQ a a' s = s a a'
 
-trueS :: BoolS
-trueS = \a a' -> a
+trueQ :: BoolQ
+trueQ = \a a' -> a
 
-falseS :: BoolS
-falseS = \a a' -> a'
+falseQ :: BoolQ
+falseQ = \a a' -> a'
 
-fromBoolS :: BoolS -> Bool
-fromBoolS s = unBoolS True False s
+fromBoolQ :: BoolQ -> Bool
+fromBoolQ s = unBoolQ True False s
 
-toBoolS :: Bool -> BoolS
-toBoolS True = trueS
-toBoolS False = falseS
-
-
-type MaybeS a = forall b. (a -> b) -> b -> b
-
-unMaybeS :: (a -> b) -> b -> MaybeS a -> b
-unMaybeS f b s = s f b
-
-justS :: a -> MaybeS a
-justS a = \f b -> f a
-
-nothingS :: MaybeS a
-nothingS = \f b -> b
-
-fromMaybeS :: MaybeS a -> Maybe a
-fromMaybeS s = unMaybeS Just Nothing s
-
-toMaybeS :: Maybe a -> MaybeS a
-toMaybeS (Just a) = justS a
-toMaybeS Nothing  = nothingS
+toBoolQ :: Bool -> BoolQ
+toBoolQ True = trueQ
+toBoolQ False = falseQ
 
 
-type EitherS a b = forall c. (a -> c) -> (b -> c) -> c
+type MaybeQ a = forall b. (a -> b) -> b -> b
 
-unEitherS :: (a -> c) -> (b -> c) -> EitherS a b -> c
-unEitherS f g s = s f g
+unMaybeQ :: (a -> b) -> b -> MaybeQ a -> b
+unMaybeQ f b s = s f b
 
-leftS :: a -> EitherS a b
-leftS a = \f g -> f a
+justQ :: a -> MaybeQ a
+justQ a = \f b -> f a
 
-rightS :: b -> EitherS a b
-rightS b = \f g -> g b
+nothingQ :: MaybeQ a
+nothingQ = \f b -> b
 
-fromEitherS :: EitherS a b -> Either a b
-fromEitherS s = unEitherS Left Right s
+fromMaybeQ :: MaybeQ a -> Maybe a
+fromMaybeQ s = unMaybeQ Just Nothing s
 
-toEitherS :: Either a b -> EitherS a b
-toEitherS (Left a)  = leftS a
-toEitherS (Right b) = rightS b
+toMaybeQ :: Maybe a -> MaybeQ a
+toMaybeQ (Just a) = justQ a
+toMaybeQ Nothing  = nothingQ
 
 
-type PairS a b = forall c. (a -> b -> c) -> c
+type EitherQ a b = forall c. (a -> c) -> (b -> c) -> c
 
-unPairS :: (a -> b -> c) -> PairS a b -> c
-unPairS f s = s f
+unEitherQ :: (a -> c) -> (b -> c) -> EitherQ a b -> c
+unEitherQ f g s = s f g
 
-pairS :: a -> b -> PairS a b
-pairS a b = \f -> f a b
+leftQ :: a -> EitherQ a b
+leftQ a = \f g -> f a
 
-fromPairS :: PairS a b -> (a, b)
-fromPairS s = unPairS (\a b -> (a, b)) s
+rightQ :: b -> EitherQ a b
+rightQ b = \f g -> g b
 
-toPairS :: (a, b) -> PairS a b
-toPairS (a, b) = pairS a b
+fromEitherQ :: EitherQ a b -> Either a b
+fromEitherQ s = unEitherQ Left Right s
 
-fstS :: PairS a b -> a
-fstS s = unPairS (\a b -> a) s
+toEitherQ :: Either a b -> EitherQ a b
+toEitherQ (Left a)  = leftQ a
+toEitherQ (Right b) = rightQ b
 
-sndS :: PairS a b -> b
-sndS s = unPairS (\a b -> b) s
+
+type PairQ a b = forall c. (a -> b -> c) -> c
+
+unPairQ :: (a -> b -> c) -> PairQ a b -> c
+unPairQ f s = s f
+
+pairQ :: a -> b -> PairQ a b
+pairQ a b = \f -> f a b
+
+fromPairQ :: PairQ a b -> (a, b)
+fromPairQ s = unPairQ (\a b -> (a, b)) s
+
+toPairQ :: (a, b) -> PairQ a b
+toPairQ (a, b) = pairQ a b
+
+fstQ :: PairQ a b -> a
+fstQ s = unPairQ (\a b -> a) s
+
+sndQ :: PairQ a b -> b
+sndQ s = unPairQ (\a b -> b) s

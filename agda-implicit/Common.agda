@@ -6,83 +6,83 @@ open import Data.Sum
 open import Data.Product
 
 
-BoolS : Set₁
-BoolS = {A : Set} -> A -> A -> A
+BoolQ : Set₁
+BoolQ = {A : Set} -> A -> A -> A
 
-unBoolS : {A : Set} -> A -> A -> BoolS -> A
-unBoolS a a' s = s a a'
+unBoolQ : {A : Set} -> A -> A -> BoolQ -> A
+unBoolQ a a' s = s a a'
 
-trueS : BoolS
-trueS = \a a' -> a
+trueQ : BoolQ
+trueQ = \a a' -> a
 
-falseS : BoolS
-falseS = \a a' -> a'
+falseQ : BoolQ
+falseQ = \a a' -> a'
 
-fromBoolS : BoolS -> Bool
-fromBoolS s = unBoolS true false s
+fromBoolQ : BoolQ -> Bool
+fromBoolQ s = unBoolQ true false s
 
-toBoolS : Bool -> BoolS
-toBoolS true  = trueS
-toBoolS false = falseS
-
-
-MaybeS : Set -> Set₁
-MaybeS A = {B : Set} -> (A -> B) -> B -> B
-
-unMaybeS : {A B : Set} -> (A -> B) -> B -> MaybeS A -> B
-unMaybeS f b s = s f b
-
-justS : {A : Set} -> A -> MaybeS A
-justS a = \f b -> f a
-
-nothingS : {A : Set} -> MaybeS A
-nothingS = \f b -> b
-
-fromMaybeS : {A : Set} -> MaybeS A -> Maybe A
-fromMaybeS s = unMaybeS just nothing s
-
-toMaybeS : {A : Set} -> Maybe A -> MaybeS A
-toMaybeS (just a) = justS a
-toMaybeS nothing  = nothingS
+toBoolQ : Bool -> BoolQ
+toBoolQ true  = trueQ
+toBoolQ false = falseQ
 
 
-EitherS : Set -> Set -> Set₁
-EitherS A B = {C : Set} -> (A -> C) -> (B -> C) -> C
+MaybeQ : Set -> Set₁
+MaybeQ A = {B : Set} -> (A -> B) -> B -> B
 
-unEitherS : {A B C : Set} -> (A -> C) -> (B -> C) -> EitherS A B -> C
-unEitherS f g s = s f g
+unMaybeQ : {A B : Set} -> (A -> B) -> B -> MaybeQ A -> B
+unMaybeQ f b s = s f b
 
-leftS : {A B : Set} -> A -> EitherS A B
-leftS a = \f g -> f a
+justQ : {A : Set} -> A -> MaybeQ A
+justQ a = \f b -> f a
 
-rightS : {A B : Set} -> B -> EitherS A B
-rightS b = \f g -> g b
+nothingQ : {A : Set} -> MaybeQ A
+nothingQ = \f b -> b
 
-fromEitherS : {A B : Set} -> EitherS A B -> A ⊎ B
-fromEitherS s = unEitherS inj₁ inj₂ s
+fromMaybeQ : {A : Set} -> MaybeQ A -> Maybe A
+fromMaybeQ s = unMaybeQ just nothing s
 
-toEitherS : {A B : Set} -> A ⊎ B -> EitherS A B
-toEitherS (inj₁ a) = leftS a
-toEitherS (inj₂ b) = rightS b
+toMaybeQ : {A : Set} -> Maybe A -> MaybeQ A
+toMaybeQ (just a) = justQ a
+toMaybeQ nothing  = nothingQ
 
 
-PairS : Set -> Set -> Set₁
-PairS A B = {C : Set} -> (A -> B -> C) -> C
+EitherQ : Set -> Set -> Set₁
+EitherQ A B = {C : Set} -> (A -> C) -> (B -> C) -> C
 
-unPairS : {A B C : Set} -> (A -> B -> C) -> PairS A B -> C
-unPairS f s = s f
+unEitherQ : {A B C : Set} -> (A -> C) -> (B -> C) -> EitherQ A B -> C
+unEitherQ f g s = s f g
 
-pairS : {A B : Set} -> A -> B -> PairS A B
-pairS a b = \f -> f a b
+leftQ : {A B : Set} -> A -> EitherQ A B
+leftQ a = \f g -> f a
 
-fromPairS : {A B : Set} -> PairS A B -> A × B
-fromPairS s = unPairS (\a b -> (a , b)) s
+rightQ : {A B : Set} -> B -> EitherQ A B
+rightQ b = \f g -> g b
 
-toPairS : {A B : Set} -> A × B -> PairS A B
-toPairS (a , b) = pairS a b
+fromEitherQ : {A B : Set} -> EitherQ A B -> A ⊎ B
+fromEitherQ s = unEitherQ inj₁ inj₂ s
 
-fstS : {A B : Set} -> PairS A B -> A
-fstS s = unPairS (\a b -> a) s
+toEitherQ : {A B : Set} -> A ⊎ B -> EitherQ A B
+toEitherQ (inj₁ a) = leftQ a
+toEitherQ (inj₂ b) = rightQ b
 
-sndS : {A B : Set} -> PairS A B -> B
-sndS s = unPairS (\a b -> b) s
+
+PairQ : Set -> Set -> Set₁
+PairQ A B = {C : Set} -> (A -> B -> C) -> C
+
+unPairQ : {A B C : Set} -> (A -> B -> C) -> PairQ A B -> C
+unPairQ f s = s f
+
+pairQ : {A B : Set} -> A -> B -> PairQ A B
+pairQ a b = \f -> f a b
+
+fromPairQ : {A B : Set} -> PairQ A B -> A × B
+fromPairQ s = unPairQ (\a b -> (a , b)) s
+
+toPairQ : {A B : Set} -> A × B -> PairQ A B
+toPairQ (a , b) = pairQ a b
+
+fstQ : {A B : Set} -> PairQ A B -> A
+fstQ s = unPairQ (\a b -> a) s
+
+sndQ : {A B : Set} -> PairQ A B -> B
+sndQ s = unPairQ (\a b -> b) s

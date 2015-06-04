@@ -5,39 +5,39 @@ module BoehmBerarducci where
 
 data Nat = S Nat | Z deriving (Eq, Ord, Read, Show)
 
-type NatS = forall a. (a -> a) -> a -> a
+type NatQ = forall a. (a -> a) -> a -> a
 
-unNatS :: (a -> a) -> a -> NatS -> a
-unNatS f a s = s f a
+unNatQ :: (a -> a) -> a -> NatQ -> a
+unNatQ f a s = s f a
 
-succS :: NatS -> NatS
-succS s = \f a -> f (s f a)
+succQ :: NatQ -> NatQ
+succQ s = \f a -> f (s f a)
 
-zeroS :: NatS
-zeroS = \f a -> a
+zeroQ :: NatQ
+zeroQ = \f a -> a
 
-fromNatS :: NatS -> Nat
-fromNatS s = unNatS S Z s
+fromNatQ :: NatQ -> Nat
+fromNatQ s = unNatQ S Z s
 
-toNatS :: Nat -> NatS
-toNatS (S n) = succS (toNatS n)
-toNatS Z     = zeroS
+toNatQ :: Nat -> NatQ
+toNatQ (S n) = succQ (toNatQ n)
+toNatQ Z     = zeroQ
 
 
-type ListS a = forall b. (a -> b -> b) -> b -> b
+type ListQ a = forall b. (a -> b -> b) -> b -> b
 
-unListS :: (a -> b -> b) -> b -> ListS a -> b
-unListS f b s = s f b
+unListQ :: (a -> b -> b) -> b -> ListQ a -> b
+unListQ f b s = s f b
 
-consS :: a -> ListS a -> ListS a
-consS a s = \f b -> f a (s f b)
+consQ :: a -> ListQ a -> ListQ a
+consQ a s = \f b -> f a (s f b)
 
-nilS :: ListS a
-nilS = \f b -> b
+nilQ :: ListQ a
+nilQ = \f b -> b
 
-fromListS :: ListS a -> [a]
-fromListS s = unListS (:) [] s
+fromListQ :: ListQ a -> [a]
+fromListQ s = unListQ (:) [] s
 
-toListS :: [a] -> ListS a
-toListS (a : aa) = consS a (toListS aa)
-toListS []       = nilS
+toListQ :: [a] -> ListQ a
+toListQ (a : aa) = consQ a (toListQ aa)
+toListQ []       = nilQ
